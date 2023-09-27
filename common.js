@@ -1,11 +1,11 @@
 const PREMIUM = {
-    id: "61556ed3c0647e001a015cf5sss",
-    name: "PREMIUM",
-    email: "no_address",
+    id: "undefine",
+    name: "github.com/mwarevn",
+    email: "undefine",
     userType: "Premium",
     premium: {
-        expDate: "5000-03-16T00:00:00.000Z",
-        iatDate: "2022-03-08T16:19:51.303Z",
+        expDate: "9999-09-09T00:00:00.000Z",
+        iatDate: "0000-00-08T00:19:51.303Z",
         isGift: 0,
         plan: "Graduate",
     },
@@ -452,53 +452,6 @@ const notiUser = (e, t) => {
                   )));
 };
 function updateUser() {
-    //   chrome.storage.local.get(["user"], ({ user: PREMIUM }) => {
-    //     !PREMIUM ||
-    //       ("object" == typeof PREMIUM && 0 === Object.keys(PREMIUM).length) ||
-    //       fetch(apiUrl + "/user/userType/" + PREMIUM.id)
-    //         .then((e) => e.json())
-    //         .then((e) => {
-    //           var t;
-    //           e &&
-    //             (({ userType: t, premium: e } = e),
-    //             console.debug(PREMIUM.userType, t),
-    //             ((PREMIUM && PREMIUM.userType !== t) ||
-    //               PREMIUM.premium.expDate !== e.expDate) &&
-    //               ("Premium" == PREMIUM.userType && "Free" == t
-    //                 ? notify(
-    //                     {
-    //                       message:
-    //                         "Hạn dùng Premium của bạn đã hết. Hãy nâng cấp để tiếp tục sử dụng Premium",
-    //                       buttons: [{ title: "Nâng cấp" }],
-    //                     },
-    //                     "premium_expired"
-    //                   )
-    //                 : "Free" == PREMIUM.userType &&
-    //                   "Premium" == t &&
-    //                   (notify({
-    //                     message:
-    //                       "Chúc mừng! Tài khoản của bạn đã được nâng cấp lên Premium",
-    //                   }),
-    //                   chrome.tabs.query(
-    //                     {
-    //                       url: [
-    //                         "https://cms.quizpoly.xyz/*",
-    //                         "*://lms.poly.edu.vn/*",
-    //                         "*://lms-ptcd.poly.edu.vn/*",
-    //                       ],
-    //                     },
-    //                     (e) => {
-    //                       for (tab of e) chrome.tabs.reload(tab.id);
-    //                     }
-    //                   )),
-    //               (PREMIUM.userType = t),
-    //               (PREMIUM.premium = e),
-    //               chrome.storage.local.set({ user: PREMIUM })));
-    //         })
-    //         .catch((e) => {
-    //           console.error(e);
-    //         });
-    //   }),
     chrome.cookies.get({ url: apiUrl, name: "token" }, (e) => {
         null === e &&
             chrome.storage.local.set({ isLogged: !1, user: void 0 }, () => {
