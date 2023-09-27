@@ -11,6 +11,7 @@ const PREMIUM = {
     },
     studentCode: "hidden_code",
 };
+
 const apiUrl = "https://api.quizpoly.xyz",
     redirect_uri = "https://api.quizpoly.xyz/auth/google",
     lastResetDateKey = "lastResetDate",
@@ -415,42 +416,6 @@ updateUser(),
     chrome.management.getSelf((e) => {
         (installType = e.installType), (extVersion = e.version);
     });
-const notiUser = (e, t) => {
-    if (!e)
-        return (
-            (t.userType = "Free"), void chrome.storage.local.set({ user: t })
-        );
-    var { userType: n, premium: e } = e;
-    console.debug(t.userType, n),
-        console.log("condition", t.userType !== n || t.premium !== e),
-        (t.userType === n && t.premium === e) ||
-            ((t.userType = n),
-            (t.premium = e),
-            chrome.storage.local.set({ user: t }),
-            "Premium" == t.userType && "Free" == n
-                ? (console.debug("noti pre"),
-                  notify(
-                      {
-                          message:
-                              "Hạn dùng Premium của bạn đã hết. Hãy nâng cấp để tiếp tục sử dụng Premium",
-                          buttons: [{ title: "Nâng cấp" }],
-                      },
-                      "premium_expired",
-                  ))
-                : "Free" == t.userType &&
-                  "Premium" == n &&
-                  (console.debug("noti free"),
-                  notify({
-                      message:
-                          "Chúc mừng! Tài khoản của bạn đã được nâng cấp lên Premium",
-                  }),
-                  chrome.tabs.query(
-                      { url: ["https://cms.quizpoly.xyz/*"] },
-                      (e) => {
-                          for (tab of e) chrome.tabs.reload(tab.id);
-                      },
-                  )));
-};
 function updateUser() {
     chrome.cookies.get({ url: apiUrl, name: "token" }, (e) => {
         null === e &&
@@ -575,4 +540,5 @@ export {
     addQuiz,
     getQuizAvailable,
     getOnlineAnswer,
+    PREMIUM,
 };
