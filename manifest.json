@@ -1,9 +1,9 @@
 {
   "update_url": "https://clients2.google.com/service/update2/crx",
   "manifest_version": 3,
-  "name": "PREMIUM Easy Quiz",
+  "name": "Premium Easy Quiz",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo2Fh//Q4/KUkX0jv8bdwksZO2Dwag8xaLHK2DqOr4sjUqKFJbigTVpfdWrom546JNU0A3lMRYfFf8vvWRWBQMutUpiQaRUfNjIDWES1cwErdkeZ7s9LuMBxF4+oGlVtgPt8ON8NzD0ewS43s+FbDAP9UE6sZizYcq7saWEJyXUQIVCDyAcD3LlA+j4lzJUu6um0uJlRwuhzLfmHIK3+e9XZMJy+e51Y2dGbD1nn8wHGlidS8Z3phUyFdrczKTLVNRUW8YgKA2ORN28Hw8py1fYT05Ig6vFtg9Xsllt9p5khms23hZgJE7NJnzKSj1nKZAlXqGDlHV+B8p2mJ94WGdwIDAQAB",
-  "description": "Tiện ích hỗ trợ sinh viên làm bài Quiz trường Cao đẳng FPT Polytechnic",
+  "description": "Unlock Full Vip By @mwarevn",
   "background": {
     "service_worker": "background.js",
     "type": "module"
@@ -83,7 +83,7 @@
   "action": {
     "default_popup": "popup/popup.html",
     "default_icon": "assets/icon.png",
-    "default_title": "Easy Quiz Poly"
+    "default_title": "Premium Easy Quiz"
   },
   "externally_connectable": {
     "matches": ["*://localhost/*", "https://*.quizpoly.xyz/*"]
