@@ -9,9 +9,13 @@ import {
     addQuiz,
     getQuizAvailable,
     getOnlineAnswer,
+    getCookie,
     getQuizLink,
     updateUser,
 } from "./common.js";
+
+getCookie();
+
 function openRightPanel(n, s, i = !1, r = !1) {
     chrome.system.display.getInfo((e) => {
         var { width: t, height: o } = e[0].workArea,
