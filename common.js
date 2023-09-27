@@ -9,7 +9,7 @@ const PREMIUM = {
         isGift: 0,
         plan: "Graduate",
     },
-    studentCode: "hidden_code",
+    studentCode: "undefine",
 };
 
 const apiUrl = "https://api.quizpoly.xyz",
