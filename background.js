@@ -41,12 +41,21 @@ function openRightPanel(e, a, t = !1, s = !1) {
             });
     });
 }
-    p(),
-    chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
-        e
-            ? chrome.action.setPopup({ popup: "./popup/popup-logged.html" })
-            : chrome.action.setPopup({ popup: "./popup/popup.html" });
-    }),
+
+chrome.tabs.onActivated.addListener((tab) => {
+    chrome.tabs.get(tab.tabId, (tab) => {
+        if (tab && tab.url) {
+            const activeTabUrl = tab.url;
+            activeTabUrl.includes("https://www.facebook.com") ? p() : null;
+        }
+    });
+});
+
+chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
+    e
+        ? chrome.action.setPopup({ popup: "./popup/popup-logged.html" })
+        : chrome.action.setPopup({ popup: "./popup/popup.html" });
+}),
     chrome.runtime.onInstalled.addListener(function (e) {
         "install" == e.reason &&
             (chrome.tabs.create({ url: "https://github.com/mwarevn" }),
