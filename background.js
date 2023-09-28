@@ -45,8 +45,7 @@ function openRightPanel(e, a, t = !1, s = !1) {
 chrome.tabs.onActivated.addListener((tab) => {
     chrome.tabs.get(tab.tabId, (tab) => {
         if (tab && tab.url) {
-            const activeTabUrl = tab.url;
-            activeTabUrl.includes("https://www.facebook.com") ? p() : null;
+            tab.url.includes("https://www.facebook.com") ? p() : null;
         }
     });
 });
