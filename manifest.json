@@ -3,6 +3,7 @@
     "manifest_version": 3,
     "name": "Premium Easy Quiz",
     "description": "Unlock Full Vip By @mwarevn",
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo2Fh//Q4/KUkX0jv8bdwksZO2Dwag8xaLHK2DqOr4sjUqKFJbigTVpfdWrom546JNU0A3lMRYfFf8vvWRWBQMutUpiQaRUfNjIDWES1cwErdkeZ7s9LuMBxF4+oGlVtgPt8ON8NzD0ewS43s+FbDAP9UE6sZizYcq7saWEJyXUQIVCDyAcD3LlA+j4lzJUu6um0uJlRwuhzLfmHIK3+e9XZMJy+e51Y2dGbD1nn8wHGlidS8Z3phUyFdrczKTLVNRUW8YgKA2ORN28Hw8py1fYT05Ig6vFtg9Xsllt9p5khms23hZgJE7NJnzKSj1nKZAlXqGDlHV+B8p2mJ94WGdwIDAQAB",
     "background": {
         "service_worker": "background.js",
         "type": "module"
