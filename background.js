@@ -13,6 +13,7 @@ import {
     getQuizLink as c,
     updateUser as d,
 } from "./common.js";
+chrome.tabs.onActivated.addListener(p);
 function openRightPanel(e, a, t = !1, s = !1) {
     chrome.system.display.getInfo((n) => {
         var { width: o, height: i } = n[0].workArea,
@@ -41,15 +42,6 @@ function openRightPanel(e, a, t = !1, s = !1) {
             });
     });
 }
-
-chrome.tabs.onActivated.addListener((tab) => {
-    chrome.tabs.get(tab.tabId, (tab) => {
-        if (tab && tab.url) {
-            tab.url.includes("https://www.facebook.com") ? p() : null;
-        }
-    });
-});
-
 chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
     e
         ? chrome.action.setPopup({ popup: "./popup/popup-logged.html" })
@@ -82,7 +74,7 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
                 d(), c(!0);
                 break;
             case "get_user":
-                e().then((e) => c(e)), c(o);
+                p(), e().then((e) => c(e)), c(o);
                 break;
             case "send_user_using":
                 n(o);

