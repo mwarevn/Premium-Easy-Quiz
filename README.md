@@ -1,3 +1,4 @@
+
 # Premium-Easy-Quiz
 
 - Mở khóa premium Easy-Quiz-Poly miễn phí không quoảng cáo, làm hết tất cả quiz cùng một lúc
@@ -14,6 +15,7 @@
 
 ## Video hướng dẫn cài đặt
 
-<a href="https://youtu.be/cG83bASi384" target="_blank">
-  <img src"https://user-images.githubusercontent.com/124526287/271692185-305f0597-e0c7-4ecb-829a-d756cf9d4e11.png" alt="Hướng dẫn cài đặt" />
-</a>
+# <a href="https://youtu.be/cG83bASi384" target="_blank" >Xem video</a>
+
+![image](https://github.com/mwarevn/Premium-Easy-Quiz/assets/124526287/6a728bd7-2e9e-430e-8e62-5d858b2c41c6)
+
