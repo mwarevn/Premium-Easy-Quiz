@@ -493,10 +493,10 @@ function autoQuiz(e, t, r, n) {
             !(function () {
                 if ("object" == typeof s)
                     l.forEach((t) => {
-                        // set true aswaer
+                
                         t ? t.click() : t;
                         s.find((e) => e == formatBeforeAdd(t.textContent)) &&
-                            (t.style.color = "green", t.style.fontWeight = "bold");
+                            (t.style.color = "orangered", t.style.fontWeight = "bold");
                     });
                 else {
                     let e = [...l].find((e) => {
@@ -506,12 +506,9 @@ function autoQuiz(e, t, r, n) {
                             formatBeforeAdd(e.textContent) == s
                         );
                     });
-                    // set true aswaer
-
-                    e ? e.click() : e;
 
                     e
-                        ? (e.style.color = "green", e.style.fontWeight = "bold")
+                        ? (e.style.color = "orangered", e.style.fontWeight = "bold")
                         : console.debug("Can not find element answer");
                 }
             })(),
