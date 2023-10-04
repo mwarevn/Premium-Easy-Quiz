@@ -496,7 +496,7 @@ function autoQuiz(e, t, r, n) {
                         // set true aswaer
                         t ? t.click() : t;
                         s.find((e) => e == formatBeforeAdd(t.textContent)) &&
-                            (t.style.color = "green");
+                            (t.style.color = "green", t.style.fontWeight = "bold");
                     });
                 else {
                     let e = [...l].find((e) => {
@@ -511,7 +511,7 @@ function autoQuiz(e, t, r, n) {
                     e ? e.click() : e;
 
                     e
-                        ? (e.style.color = "green")
+                        ? (e.style.color = "green", e.style.fontWeight = "bold")
                         : console.debug("Can not find element answer");
                 }
             })(),
