@@ -12,8 +12,8 @@
         {
             "matches": [
                 "*://*.poly.edu.vn/*&sequence=*",
-                "http://*/*",
-                "https://*/*"
+                "http://*.poly.edu.vn/*",
+                "https://*.poly.edu.vn/*"
             ],
             "exclude_matches": [
                 "*://*.poly.edu.vn/*cmd=outQuestionSummary*",
