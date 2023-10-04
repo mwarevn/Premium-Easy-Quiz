@@ -482,16 +482,21 @@ function autoQuiz(e, t, r, n) {
                         `Auto answer: Can not add event click to next button: ${e} - ${window.location.href} - ${sequence}: ${totalQues}`,
                     );
                 }
-                setTimeout(() => u.forEach((e) => {
-                    e ? e.style.display = "" : e
-                }), 1e3);
-                
+                setTimeout(
+                    () =>
+                        u.forEach((e) => {
+                            e ? (e.style.display = "") : e;
+                        }),
+                    1e3,
+                );
             }
             !(function () {
                 if ("object" == typeof s)
                     l.forEach((t) => {
+                        // set true aswaer
+                        t ? t.click() : t;
                         s.find((e) => e == formatBeforeAdd(t.textContent)) &&
-                            (t.style.color = "red");
+                            (t.style.color = "green");
                     });
                 else {
                     let e = [...l].find((e) => {
@@ -501,8 +506,12 @@ function autoQuiz(e, t, r, n) {
                             formatBeforeAdd(e.textContent) == s
                         );
                     });
+                    // set true aswaer
+
+                    e ? e.click() : e;
+
                     e
-                        ? (e.style.color = "red", e.checked = true)
+                        ? (e.style.color = "green")
                         : console.debug("Can not find element answer");
                 }
             })(),
