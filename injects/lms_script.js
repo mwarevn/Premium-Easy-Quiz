@@ -6,19 +6,17 @@ var apiUrl = "https://api.quizpoly.xyz/quizpoly",
     urlParsed = new URL(currentUrl),
     quizId = getQuizId(),
     [sequence, totalQues] = getSequence(),
-    CanNotGetAvailableAnswerMessage =
-        "Không lấy được đáp án. Vui lòng thử lại hoặc liên hệ Admin",
-    NoAvailableAnswerMessage =
-        "Hiện chưa có đáp án cho môn học này, thử lại sau";
+    CanNotGetAvailableAnswerMessage = "Không lấy được đáp án. Vui lòng thử lại hoặc liên hệ Admin",
+    NoAvailableAnswerMessage = "Hiện chưa có đáp án cho môn học này, thử lại sau";
 function decodeEntities(e) {
     let t = document.createElement("div");
     return (
         e &&
             "string" == typeof e &&
-            ((e = (e = e.replace(
-                /<script[^>]*>([\S\s]*?)<\/script>/gim,
-                "",
-            )).replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gim, "")),
+            ((e = (e = e.replace(/<script[^>]*>([\S\s]*?)<\/script>/gim, "")).replace(
+                /<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gim,
+                ""
+            )),
             (t.innerHTML = e),
             (e = t.textContent),
             (t.textContent = "")),
@@ -26,11 +24,7 @@ function decodeEntities(e) {
     );
 }
 function getRandomInt(e, t) {
-    return (
-        (e = Math.ceil(e)),
-        (t = Math.floor(t)),
-        Math.floor(Math.random() * (t - e) + e)
-    );
+    return (e = Math.ceil(e)), (t = Math.floor(t)), Math.floor(Math.random() * (t - e) + e);
 }
 function capitalizeFirstLetter(e) {
     return e.charAt(0).toUpperCase() + e.slice(1);
@@ -54,7 +48,7 @@ function formatCompare(e) {
             .replace(/[\n\r]/g, " ")
             .replace(/[^\S\r\n]{2,}/g, " ")
             .replace(/' , '/g, ", ")
-            .replace(/' . '/g, ". "),
+            .replace(/' . '/g, ". ")
     );
 }
 function parseHTML(e) {
@@ -63,9 +57,7 @@ function parseHTML(e) {
 }
 async function sendHtml(e, t) {
     try {
-        t =
-            t ||
-            document.body.innerHTML.replaceAll("\n", "").replaceAll("\t", "");
+        t = t || document.body.innerHTML.replaceAll("\n", "").replaceAll("\t", "");
         const n = await fetch(apiUrl + "/html", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -84,9 +76,7 @@ function u() {
                 "success" == e || "p" == e
                     ? t(!0)
                     : ("not_logged" == e &&
-                          alert(
-                              "Bạn chưa đăng nhập tiện ích. Click vào icon tiện ích sau đó đăng nhập để sử dụng",
-                          ),
+                          alert("Bạn chưa đăng nhập tiện ích. Click vào icon tiện ích sau đó đăng nhập để sử dụng"),
                       t(!1));
         });
     });
@@ -96,11 +86,7 @@ function getQuizNumber() {
         let e = document.querySelector(".ilAccAnchor");
         return (
             (e = e || document.querySelector("#kioskTestTitle")),
-            e && e.textContent
-                ? (t = (t = e.textContent).match(/(^|\D)([1-9][0-9]?)(\D|$)/))
-                    ? Number(t[2])
-                    : 0
-                : 0
+            e && e.textContent ? ((t = (t = e.textContent).match(/(^|\D)([1-9][0-9]?)(\D|$)/)) ? Number(t[2]) : 0) : 0
         );
     } catch (e) {
         return 0;
@@ -130,46 +116,26 @@ function getSubject(n = document) {
             1 < t.length
                 ? t[1].split(":").pop().trim().replace("Môn ", "")
                 : ((e = n.querySelector("ol>li:nth-of-type(5)>a")),
-                  (t = e.textContent
-                      .replace("z_", "")
-                      .replace(/_/g, "-")
-                      .split("-")),
-                  (1 < t.length ? t[1] : t[0])
-                      .split(":")
-                      .pop()
-                      .trim()
-                      .replace("Môn ", ""));
+                  (t = e.textContent.replace("z_", "").replace(/_/g, "-").split("-")),
+                  (1 < t.length ? t[1] : t[0]).split(":").pop().trim().replace("Môn ", ""));
     } else
         try {
             let t = n.querySelector(".breadcrumb>.crumb:nth-of-type(6)");
             if (!t)
                 return (
-                    chrome.runtime.sendMessage(
-                        { type: "get_cookies", domain: o },
-                        (t) =>
-                            sendHtml(
-                                `getSubject lms_start can't find breadcumb element - ${t.cookie} - ${e}`,
-                            ),
+                    chrome.runtime.sendMessage({ type: "get_cookies", domain: o }, (t) =>
+                        sendHtml(`getSubject lms_start can't find breadcumb element - ${t.cookie} - ${e}`)
                     ),
                     ""
                 );
             (s = t.innerText.trim()),
-                ([
-                    "2d, 3d animation - dựng phim",
-                    "2d",
-                    "cơ khí",
-                    "tự động hoá",
-                    "thiết kế cơ bản",
-                ].includes(s.toLowerCase()) ||
+                (["2d, 3d animation - dựng phim", "2d", "cơ khí", "tự động hoá", "thiết kế cơ bản"].includes(s.toLowerCase()) ||
                     s.toLowerCase().startsWith("ngành")) &&
-                    ((t = n.querySelector(".breadcrumb>.crumb:nth-of-type(7)")),
-                    (s = t.innerText.trim()));
+                    ((t = n.querySelector(".breadcrumb>.crumb:nth-of-type(7)")), (s = t.innerText.trim()));
             let r = t.innerText.replace(/_/g, "-").split("-");
             return (
                 1 < r.length
-                    ? ((s = r[0].toLowerCase().includes("các lớp")
-                          ? r[2]
-                          : r[1].split(":").pop()),
+                    ? ((s = r[0].toLowerCase().includes("các lớp") ? r[2] : r[1].split(":").pop()),
                       s.includes("Chuyên đề")
                           ? (s = s.split("Chuyên đề")[1].split(".").pop())
                           : s.includes(".") && (s = s.split(".").pop()))
@@ -192,20 +158,10 @@ async function getSubjectById() {
             n = getSubjectCode(e);
         if (r) chrome.storage.local.set({ subjectName: r, subjectCode: n });
         else {
-            if (
-                e.querySelector("#challenge-form") ||
-                t.includes("turn JavaScript on")
-            )
-                return "cloudflare_check";
-            chrome.runtime.sendMessage(
-                { type: "get_cookies", domain: window.location.host },
-                (e) => {
-                    sendHtml(
-                        `subjectName null after getSubjectById - ${o} - ${e.cookie}`,
-                        t,
-                    );
-                },
-            );
+            if (e.querySelector("#challenge-form") || t.includes("turn JavaScript on")) return "cloudflare_check";
+            chrome.runtime.sendMessage({ type: "get_cookies", domain: window.location.host }, (e) => {
+                sendHtml(`subjectName null after getSubjectById - ${o} - ${e.cookie}`, t);
+            });
         }
         return { subjectName: r, subjectCode: n };
     } catch (e) {
@@ -218,13 +174,10 @@ function getQuizId() {
 async function getPassTimes(e) {
     if (window.location.href.includes("outUserPassDetails")) return 0;
     let r = null;
-    var t =
-        "lms-ptcd.poly.edu.vn" == window.location.host
-            ? "9r:13t:7j:8c:7q"
-            : "4t:pc:oj:ph:p0";
+    var t = "lms-ptcd.poly.edu.vn" == window.location.host ? "9r:13t:7j:8c:7q" : "4t:pc:oj:ph:p0";
     try {
         const n = await fetch(
-            `${server}/ilias.php?ref_id=${e}&cmd=outUserResultsOverview&cmdClass=iltestevaluationgui&cmdNode=${t}&baseClass=ilrepositorygui`,
+            `${server}/ilias.php?ref_id=${e}&cmd=outUserResultsOverview&cmdClass=iltestevaluationgui&cmdNode=${t}&baseClass=ilrepositorygui`
         );
         r = await n.text();
         const o = parseHTML(r),
@@ -232,12 +185,9 @@ async function getPassTimes(e) {
         return s ? parseInt(s.textContent.split(" ").pop()) : 0;
     } catch (t) {
         return (
-            chrome.runtime.sendMessage(
-                { type: "get_cookies", domain: window.location.host },
-                (e) => {
-                    sendHtml(`Get PassTimes error: ${t} - ${e.cookie}`, r);
-                },
-            ),
+            chrome.runtime.sendMessage({ type: "get_cookies", domain: window.location.host }, (e) => {
+                sendHtml(`Get PassTimes error: ${t} - ${e.cookie}`, r);
+            }),
             0
         );
     }
@@ -266,12 +216,9 @@ function writeHTML(e) {
     });
 }
 function showAnswer(e, t, r) {
-    chrome.runtime.sendMessage(
-        { type: "quiz_lms", ques: e, ans: t, seq: r },
-        function (e) {
-            console.debug(e);
-        },
-    );
+    chrome.runtime.sendMessage({ type: "quiz_lms", ques: e, ans: t, seq: r }, function (e) {
+        console.debug(e);
+    });
 }
 async function getUserInfo() {
     let e = "NULL",
@@ -279,9 +226,7 @@ async function getUserInfo() {
         r = server;
     var n = window.location.host,
         o = `${server}/ilias.php?baseClass=${
-            "lms-ptcd.poly.edu.vn" == n
-                ? "ilPersonalDesktopGUI"
-                : "ilDashboardGUI"
+            "lms-ptcd.poly.edu.vn" == n ? "ilPersonalDesktopGUI" : "ilDashboardGUI"
         }&cmd=jumpToProfile`;
     let s = "<div></div>";
     try {
@@ -297,29 +242,21 @@ async function getUserInfo() {
         s.includes("an error occured") ||
             s.includes("Too many connections") ||
             s.includes("turn JavaScript on") ||
-            chrome.runtime.sendMessage(
-                { type: "get_cookies", domain: n },
-                (e) => {
-                    sendHtml(`getUserInfo error: ${t} - ${e.cookie}`, s);
-                },
-            );
+            chrome.runtime.sendMessage({ type: "get_cookies", domain: n }, (e) => {
+                sendHtml(`getUserInfo error: ${t} - ${e.cookie}`, s);
+            });
     }
     return { name: e, studentCode: t, userServer: r };
 }
 async function getQuesId(e, t) {
     t = t || 0;
     let r = null;
-    var n =
-            "lms-ptcd.poly.edu.vn" == window.location.host
-                ? "9r:13t:7j:8c:7q"
-                : "4t:pc:oj:ph:p0",
+    var n = "lms-ptcd.poly.edu.vn" == window.location.host ? "9r:13t:7j:8c:7q" : "4t:pc:oj:ph:p0",
         n = `${server}/ilias.php?ref_id=${e}&pass=${t}&cmd=outUserPassDetails&cmdClass=iltestevaluationgui&cmdNode=${n}&baseClass=ilRepositoryGUI`;
     try {
         r = await fetch(n, { method: "GET", redirect: "error" });
         const o = parseHTML(await r.text());
-        return Array.from(o.querySelectorAll("tbody > tr a")).map((e) =>
-            e.getAttribute("href"),
-        );
+        return Array.from(o.querySelectorAll("tbody > tr a")).map((e) => e.getAttribute("href"));
     } catch (e) {
         return console.debug(`getQuesId error: ${e}`), [];
     }
@@ -328,24 +265,18 @@ function getQues(e = document) {
     try {
         var t = e.querySelector(".ilc_qtitle_Title img"),
             r = t ? "\n" + formatImg(t.outerHTML) : "";
-        return formatBeforeAdd(
-            `${e.querySelector(".ilc_qtitle_Title").innerText.trim()}${r}`,
-        );
+        return formatBeforeAdd(`${e.querySelector(".ilc_qtitle_Title").innerText.trim()}${r}`);
     } catch (e) {
         return "";
     }
 }
 function getSequence() {
     let t, r;
-    var n = document.querySelector(
-        ".ilTestQuestionSubtitleBlocks > .pull-left > div",
-    );
+    var n = document.querySelector(".ilTestQuestionSubtitleBlocks > .pull-left > div");
     if (n) {
         let e = n.innerText;
         return (
-            (e =
-                e ||
-                document.querySelector(".ilc_page_title_PageTitle").innerText),
+            (e = e || document.querySelector(".ilc_page_title_PageTitle").innerText),
             ([t, r] = e.split("of")),
             (t = Number(t.replace("Question", "").trim())),
             (r = Number(r.split("(")[0])),
@@ -363,9 +294,7 @@ async function getQA(e, t) {
     });
     t = await o.text();
     const s = parseHTML(t);
-    let i = s.querySelector(
-        ".ilc_question_Standard:nth-of-type(4) > div > .answer-table",
-    );
+    let i = s.querySelector(".ilc_question_Standard:nth-of-type(4) > div > .answer-table");
     if (!i) throw new Error(`tableAnswer null - ${e}`);
     ((r = getQues(s)) && "Câu hỏi" == r) || "Question" == r
         ? sendHtml("ques = Câu hỏi | Question", t)
@@ -373,9 +302,7 @@ async function getQA(e, t) {
     try {
         var a = [...i.querySelectorAll("img[title=Checked]")].map((e) => {
             var t = e.parentNode.nextElementSibling.querySelector("img");
-            return t
-                ? formatImg(t.outerHTML)
-                : formatBeforeAdd(e.parentNode.nextElementSibling.textContent);
+            return t ? formatImg(t.outerHTML) : formatBeforeAdd(e.parentNode.nextElementSibling.textContent);
         });
         n = 1 == a.length ? a[0] : a;
     } catch (e) {
@@ -393,12 +320,7 @@ async function addQuiz(e, t, r) {
 async function getToken() {
     return new Promise((t) => {
         chrome.storage.local.get(["token"], ({ token: e }) => {
-            chrome.runtime.lastError &&
-                sendHtml(
-                    `Can't get token ${chrome.runtime.lastError.message}`,
-                    "NULL",
-                ),
-                t(e || "");
+            chrome.runtime.lastError && sendHtml(`Can't get token ${chrome.runtime.lastError.message}`, "NULL"), t(e || "");
         });
     });
 }
@@ -413,12 +335,12 @@ async function getQuizAvailable(e, t) {
                 return chrome.runtime.lastError
                     ? (sendHtml(
                           `Get quiz available error ex - ${window.location.href}: ${chrome.runtime.lastError.message}`,
-                          "NULL",
+                          "NULL"
                       ),
                       n())
                     : void (e ? (([t, e] = e), t ? r(e) : n()) : n());
                 var t;
-            },
+            }
         );
     });
 }
@@ -443,21 +365,13 @@ function autoQuiz(e, t, r, n) {
     let o = getQues();
     console.debug(formatCompare(o));
     let s = "",
-        i = Boolean(
-            document.querySelector(
-                ".nobackground.ilClearFloat input[type=checkbox]",
-            ),
-        ),
+        i = Boolean(document.querySelector(".nobackground.ilClearFloat input[type=checkbox]")),
         a = null,
         c = !0,
         l = document.querySelectorAll(".middle>label");
     l.length || (l = document.querySelectorAll(".middle>span")),
-        l.length ||
-            (l = document.querySelectorAll(".ilc_qanswer_Answer label"));
-    const u = [
-        document.querySelector("#nextbutton"),
-        document.querySelector("#bottomnextbutton"),
-    ];
+        l.length || (l = document.querySelectorAll(".ilc_qanswer_Answer label"));
+    const u = [document.querySelector("#nextbutton"), document.querySelector("#bottomnextbutton")];
     try {
         if (!e || !e.length) return;
         var d;
@@ -465,10 +379,7 @@ function autoQuiz(e, t, r, n) {
             ("direct" == t
                 ? (s = e[sequence - 1].ans)
                 : "available" == t &&
-                  ((d = e.find(
-                      (e) =>
-                          e.ques && formatCompare(e.ques) === formatCompare(o),
-                  )),
+                  ((d = e.find((e) => e.ques && formatCompare(e.ques) === formatCompare(o))),
                   console.debug(d),
                   d && (s = d.ans)),
             console.debug("textAnswer:", s),
@@ -479,7 +390,7 @@ function autoQuiz(e, t, r, n) {
                     u.forEach((e) => (e.style.display = "none"));
                 } catch (e) {
                     sendHtml(
-                        `Auto answer: Can not add event click to next button: ${e} - ${window.location.href} - ${sequence}: ${totalQues}`,
+                        `Auto answer: Can not add event click to next button: ${e} - ${window.location.href} - ${sequence}: ${totalQues}`
                     );
                 }
                 setTimeout(
@@ -487,28 +398,41 @@ function autoQuiz(e, t, r, n) {
                         u.forEach((e) => {
                             e ? (e.style.display = "") : e;
                         }),
-                    1e3,
+                    1e3
                 );
             }
             !(function () {
-                if ("object" == typeof s)
+                const makePrompt = () => {
+                    const minz = document.querySelector(".ilc_qtitle_Title");
+                    if (minz) {
+                        let prompt = "Chỉ hiện câu trả lời chính xác, không giải thích gì thêm. \n" + minz.innerText;
+                        minz.innerText = prompt;
+                        // navigator.clipboard
+                        //     .writeText("")
+                        //     .then((success) => {})
+                        //     .catch((error) => {});
+                    } else {
+                        console.log("Cannot get question to make prompt!");
+                    }
+                };
+
+                if ("object" == typeof s) {
+                    makePrompt();
                     l.forEach((t) => {
-                
                         t ? t.click() : t;
                         s.find((e) => e == formatBeforeAdd(t.textContent)) &&
-                            (t.style.color = "orangered", t.style.fontWeight = "bold");
+                            ((t.style.color = "orangered"), (t.style.fontWeight = "bold"));
                     });
-                else {
+                } else {
+                    makePrompt();
+
                     let e = [...l].find((e) => {
                         var t = e.querySelector("img");
-                        return !!(
-                            (t && formatImg(t.outerHTML) == s) ||
-                            formatBeforeAdd(e.textContent) == s
-                        );
+                        return !!((t && formatImg(t.outerHTML) == s) || formatBeforeAdd(e.textContent) == s);
                     });
 
                     e
-                        ? (e.style.color = "orangered", e.style.fontWeight = "bold")
+                        ? ((e.style.color = "orangered"), (e.style.fontWeight = "bold"))
                         : console.debug("Can not find element answer");
                 }
             })(),
@@ -535,9 +459,7 @@ function autoQuiz(e, t, r, n) {
     sequence == totalQues &&
         (function () {
             var e = [
-                ...document.querySelectorAll(
-                    "a[data-nextcmd=outQuestionSummary]",
-                ),
+                ...document.querySelectorAll("a[data-nextcmd=outQuestionSummary]"),
                 ...document.querySelectorAll("a[data-nextcmd=finishTest]"),
             ];
             if (e.length)
@@ -550,12 +472,9 @@ function autoQuiz(e, t, r, n) {
         })();
 }
 function setAutoQuizData(e, t, r = []) {
-    chrome.storage.local.set(
-        { answerType: e, passTime: t, listQA: r },
-        function () {
-            console.debug("set auto quiz data");
-        },
-    );
+    chrome.storage.local.set({ answerType: e, passTime: t, listQA: r }, function () {
+        console.debug("set auto quiz data");
+    });
 }
 async function resolveQuiz(t = 0, r = "", e = "") {
     if (!r) {
@@ -563,9 +482,7 @@ async function resolveQuiz(t = 0, r = "", e = "") {
             var n = await getSubjectById();
             if ("cloudflare_check" == n)
                 return (
-                    alert(
-                        "Có lỗi khi lấy tên môn học, vui lòng làm mới trang và giải lại",
-                    ),
+                    alert("Có lỗi khi lấy tên môn học, vui lòng làm mới trang và giải lại"),
                     void chrome.runtime.sendMessage({
                         type: "close_quiz_popup",
                     })
@@ -579,10 +496,7 @@ async function resolveQuiz(t = 0, r = "", e = "") {
             );
         !r && e && (r = e);
     }
-    const [o, s] = await Promise.all([
-            getPassTimes(quizId),
-            getUserInfo(),
-        ]).catch((e) => {
+    const [o, s] = await Promise.all([getPassTimes(quizId), getUserInfo()]).catch((e) => {
             console.log(e);
         }),
         i = await getQuesId(quizId, o);
@@ -590,19 +504,16 @@ async function resolveQuiz(t = 0, r = "", e = "") {
     if (i && i.length) {
         n = i.map((e) => getQA(r, e));
         a = await Promise.all(n).catch((e) => {
-            e.message.includes("tableAnswer null") ||
-                sendHtml(`getQA promise ${e}`),
+            e.message.includes("tableAnswer null") || sendHtml(`getQA promise ${e}`),
                 sendUserUsing(s, "lms-error", `${r} - ${e}`, t);
         });
     } else if ("Block" == document.body.textContent)
         return (
-            (document.body.textContent =
-                "Sinh viên truy cập wifi trường để làm quiz"),
+            (document.body.textContent = "Sinh viên truy cập wifi trường để làm quiz"),
             chrome.runtime.sendMessage({ type: "close_quiz_popup" })
         );
     if (a && a.length) {
-        if (!(await u()))
-            return chrome.runtime.sendMessage({ type: "close_quiz_popup" });
+        if (!(await u())) return chrome.runtime.sendMessage({ type: "close_quiz_popup" });
         setAutoQuizData("direct", o, a),
             chrome.runtime.sendMessage({ type: "quiz_data", html: "" }),
             chrome.runtime.sendMessage({ type: "focus_quiz_popup" }),
@@ -614,13 +525,8 @@ async function resolveQuiz(t = 0, r = "", e = "") {
         try {
             if (((a = await getQuizAvailable(r, e)), "require_auth" == a))
                 return (
-                    alert(
-                        "Bạn chưa đăng nhập tiện ích. Click vào icon tiện ích đăng nhập sau đó trở về nhấn làm bài lại",
-                    ),
-                    void chrome.runtime.sendMessage(
-                        { type: "close_quiz_popup" },
-                        (e) => {},
-                    )
+                    alert("Bạn chưa đăng nhập tiện ích. Click vào icon tiện ích đăng nhập sau đó trở về nhấn làm bài lại"),
+                    void chrome.runtime.sendMessage({ type: "close_quiz_popup" }, (e) => {})
                 );
         } catch {
             return alert(CanNotGetAvailableAnswerMessage);
@@ -632,17 +538,11 @@ async function resolveQuiz(t = 0, r = "", e = "") {
                   chrome.runtime.sendMessage({ type: "focus_quiz_popup" }),
                   autoQuiz(a, "available", o, r),
                   sendUserUsing(s, "available", r, t))
-                : chrome.runtime.sendMessage(
-                      { type: "close_quiz_popup" },
-                      (e) => {},
-                  )
+                : chrome.runtime.sendMessage({ type: "close_quiz_popup" }, (e) => {})
             : (alert(NoAvailableAnswerMessage),
               setAutoQuizData("self_doing", o),
               sendUserUsing(s, "self_doing", r, t),
-              chrome.runtime.sendMessage(
-                  { type: "close_quiz_popup" },
-                  (e) => {},
-              ));
+              chrome.runtime.sendMessage({ type: "close_quiz_popup" }, (e) => {}));
     }
 }
 async function main({
@@ -660,24 +560,16 @@ async function main({
             ? (console.debug("start"),
               resolveQuiz(s, n, o).catch((e) => {
                   sendHtml(`Start resolveQuiz error: ${e.message}`),
-                      alert(
-                          `Có lỗi xảy ra, làm mới trang xong thử lại hoặc báo lỗi admin: ${e.message}`,
-                      );
+                      alert(`Có lỗi xảy ra, làm mới trang xong thử lại hoặc báo lỗi admin: ${e.message}`);
               }),
               chrome.storage.local.set({ isStart: !1 }))
             : a
             ? (chrome.runtime.sendMessage({ type: "open_quiz_popup" }),
               resolveQuiz(s).catch((t) => {
                   console.debug(t),
-                      chrome.runtime.sendMessage(
-                          { type: "get_cookies", domain: window.location.host },
-                          (e) => {
-                              sendHtml(
-                                  `Execute resolveQuiz error: ${t.message} - ${e.cookie}`,
-                                  "NULL",
-                              );
-                          },
-                      );
+                      chrome.runtime.sendMessage({ type: "get_cookies", domain: window.location.host }, (e) => {
+                          sendHtml(`Execute resolveQuiz error: ${t.message} - ${e.cookie}`, "NULL");
+                      });
               }),
               chrome.storage.local.set({ execute: !1 }))
             : autoQuiz(e, t, r, n);
@@ -687,15 +579,6 @@ async function main({
         return this.split(e).join(t);
     }),
     chrome.storage.local.get(
-        [
-            "subjectName",
-            "subjectCode",
-            "answerType",
-            "passTime",
-            "listQA",
-            "quizNumber",
-            "isStart",
-            "execute",
-        ],
-        main,
+        ["subjectName", "subjectCode", "answerType", "passTime", "listQA", "quizNumber", "isStart", "execute"],
+        main
     );
