@@ -2,49 +2,40 @@ var subjectEl = document.querySelector(".ilc_rte_tlink_RTETreeLink"),
     subject = subjectEl ? subjectEl.textContent.replace(/\?/g, "") : "",
     apiUrl = "https://api.quizpoly.xyz",
     server = window.location.origin;
+
 async function main() {
     if (subject) {
-        const e = await getOnlineAnswer(subject).catch((e) =>
-            alert(`Có lỗi khi lấy đáp án, vui lòng thử lại sau: ${e}`),
-        );
+        const e = await getOnlineAnswer(subject).catch((e) => {
+            alert(`Có lỗi khi lấy đáp án, vui lòng thử lại sau: ${e}`);
+        });
         if (e && e.length) {
             if (5 <= e.length)
                 if (!(await u()))
                     return chrome.runtime.sendMessage({
                         type: "close_quiz_popup",
                     });
-            chrome.runtime.sendMessage(
-                { type: "open_quiz_popup" },
-                async () => {
-                    chrome.storage.local.set({ subjectName_: subject }),
-                        writeHTML(e),
-                        sendUserUsing(
-                            await getUserInfo(),
-                            "lms-online",
-                            subject,
-                        );
-                },
-            );
+            chrome.runtime.sendMessage({ type: "open_quiz_popup" }, async () => {
+                chrome.storage.local.set({ subjectName_: subject }),
+                    writeHTML(e),
+                    sendUserUsing(await getUserInfo(), "lms-online", subject);
+            });
         } else
-            confirm(
-                "Bài này chưa có đáp án, bạn có muốn đóng góp đáp án cho người làm sau?",
-            ) &&
-                chrome.runtime.sendMessage(
-                    { type: "open_online_popup" },
-                    () => {
-                        chrome.storage.local.set({ subjectName_: subject }),
-                            setTimeout(
-                                () =>
-                                    chrome.runtime.sendMessage({
-                                        type: "online_data",
-                                        subject: subject,
-                                        studentCode: user.studentCode,
-                                    }),
-                                1e3,
-                            );
-                    },
-                );
-    } else alert("Không lấy được bài học, làm mới trang và thử lại");
+            confirm("Bài này chưa có đáp án, bạn có muốn đóng góp đáp án cho người làm sau?") &&
+                chrome.runtime.sendMessage({ type: "open_online_popup" }, () => {
+                    chrome.storage.local.set({ subjectName_: subject }),
+                        setTimeout(
+                            () =>
+                                chrome.runtime.sendMessage({
+                                    type: "online_data",
+                                    subject: subject,
+                                    studentCode: user.studentCode,
+                                }),
+                            1e3
+                        );
+                });
+    } else {
+        alert("Không lấy được bài học, làm mới trang và thử lại");
+    }
 }
 function writeHTML(e) {
     let t = "",
@@ -70,7 +61,7 @@ function writeHTML(e) {
                 html: t,
                 online: !0,
             }),
-        1e3,
+        1e3
     );
 }
 function parseHTML(e) {
@@ -89,32 +80,25 @@ function u() {
             "success" == e || "p" == e
                 ? t(!0)
                 : ("not_logged" == e &&
-                      alert(
-                          "Bạn chưa đăng nhập tiện ích. Click vào icon tiện ích sau đó đăng nhập để sử dụng",
-                      ),
+                      alert("Bạn chưa đăng nhập tiện ích. Click vào icon tiện ích sau đó đăng nhập để sử dụng"),
                   t(!1));
         });
     });
 }
 async function getOnlineAnswer(e) {
     return new Promise((n, r) => {
-        chrome.runtime.sendMessage(
-            { type: "get_online_answer", subject: e },
-            (e) => {
-                if (chrome.runtime.lastError) return r("send_message_error");
-                var [t, e] = e;
-                if (t) {
-                    if ("require_auth" == e)
-                        return (
-                            alert(
-                                "Bạn chưa đăng nhập tiện ích. Click vào icon tiện ích sau đó đăng nhập để sử dụng",
-                            ),
-                            r("require_auth")
-                        );
-                    n(e);
-                } else r("request_failed");
-            },
-        );
+        chrome.runtime.sendMessage({ type: "get_online_answer", subject: e }, (e) => {
+            if (chrome.runtime.lastError) return r("send_message_error");
+            var [t, e] = e;
+            if (t) {
+                if ("require_auth" == e)
+                    return (
+                        alert("Bạn chưa đăng nhập tiện ích. Click vào icon tiện ích sau đó đăng nhập để sử dụng"),
+                        r("require_auth")
+                    );
+                n(e);
+            } else r("request_failed");
+        });
     });
 }
 async function getUserInfo() {
@@ -123,9 +107,7 @@ async function getUserInfo() {
         n = server;
     var r = window.location.host,
         s = `${server}/ilias.php?baseClass=${
-            "lms-ptcd.poly.edu.vn" == r
-                ? "ilPersonalDesktopGUI"
-                : "ilDashboardGUI"
+            "lms-ptcd.poly.edu.vn" == r ? "ilPersonalDesktopGUI" : "ilDashboardGUI"
         }&cmd=jumpToProfile`;
     try {
         const i = await fetch(s, { method: "GET", redirect: "follow" });

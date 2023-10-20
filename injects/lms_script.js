@@ -8,6 +8,26 @@ var apiUrl = "https://api.quizpoly.xyz/quizpoly",
     [sequence, totalQues] = getSequence(),
     CanNotGetAvailableAnswerMessage = "Không lấy được đáp án. Vui lòng thử lại hoặc liên hệ Admin",
     NoAvailableAnswerMessage = "Hiện chưa có đáp án cho môn học này, thử lại sau";
+
+function makePrompt() {
+    const minz = document.querySelector(".ilc_qtitle_Title");
+    if (minz) {
+        let prompt = "Chỉ hiện câu trả lời chính xác, không giải thích gì thêm. \n" + minz.innerText;
+        minz.innerText = prompt;
+
+        const answers = document.querySelectorAll("label.answertext");
+        let answertext = "";
+        answers.forEach((e) => {
+            answertext += e.outerText + "\n";
+        });
+        navigator.clipboard
+            .writeText(prompt + "\n" + answertext)
+            .then((success) => {})
+            .catch((error) => {});
+    } else {
+        console.log("Cannot get question to make prompt!");
+    }
+}
 function decodeEntities(e) {
     let t = document.createElement("div");
     return (
@@ -361,6 +381,7 @@ async function sendUserUsing(e, t, r, n) {
             data: { ...e, getQuizType: t, subjectName: r, quizNumber: n },
         });
 }
+
 function autoQuiz(e, t, r, n) {
     let o = getQues();
     console.debug(formatCompare(o));
@@ -402,30 +423,12 @@ function autoQuiz(e, t, r, n) {
                 );
             }
             !(function () {
-                const makePrompt = () => {
-                    const minz = document.querySelector(".ilc_qtitle_Title");
-                    if (minz) {
-                        let prompt = "Chỉ hiện câu trả lời chính xác, không giải thích gì thêm. \n" + minz.innerText;
-                        minz.innerText = prompt;
-                        // navigator.clipboard
-                        //     .writeText("")
-                        //     .then((success) => {})
-                        //     .catch((error) => {});
-                    } else {
-                        console.log("Cannot get question to make prompt!");
-                    }
-                };
-
                 if ("object" == typeof s) {
-                    makePrompt();
                     l.forEach((t) => {
-                        t ? t.click() : t;
                         s.find((e) => e == formatBeforeAdd(t.textContent)) &&
                             ((t.style.color = "orangered"), (t.style.fontWeight = "bold"));
                     });
                 } else {
-                    makePrompt();
-
                     let e = [...l].find((e) => {
                         var t = e.querySelector("img");
                         return !!((t && formatImg(t.outerHTML) == s) || formatBeforeAdd(e.textContent) == s);
@@ -529,6 +532,7 @@ async function resolveQuiz(t = 0, r = "", e = "") {
                     void chrome.runtime.sendMessage({ type: "close_quiz_popup" }, (e) => {})
                 );
         } catch {
+            chrome.runtime.sendMessage({ type: "close_quiz_popup" });
             return alert(CanNotGetAvailableAnswerMessage);
         }
         a && a.length
