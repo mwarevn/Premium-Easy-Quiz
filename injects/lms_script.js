@@ -510,11 +510,12 @@ async function resolveQuiz(t = 0, r = "", e = "") {
             e.message.includes("tableAnswer null") || sendHtml(`getQA promise ${e}`),
                 sendUserUsing(s, "lms-error", `${r} - ${e}`, t);
         });
-    } else if ("Block" == document.body.textContent)
-        return (
-            (document.body.textContent = "Sinh viên truy cập wifi trường để làm quiz"),
-            chrome.runtime.sendMessage({ type: "close_quiz_popup" })
-        );
+    }
+    // else if ("Block" == document.body.textContent)
+    //     return (
+    //         (document.body.textContent = "Sinh viên truy cập wifi trường để làm quiz"),
+    //         chrome.runtime.sendMessage({ type: "close_quiz_popup" })
+    //     );
     if (a && a.length) {
         if (!(await u())) return chrome.runtime.sendMessage({ type: "close_quiz_popup" });
         setAutoQuizData("direct", o, a),

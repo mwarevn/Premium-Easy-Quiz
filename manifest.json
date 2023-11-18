@@ -10,11 +10,7 @@
     },
     "content_scripts": [
         {
-            "matches": [
-                "*://*.poly.edu.vn/*&sequence=*",
-                "http://*.poly.edu.vn/*",
-                "https://*.poly.edu.vn/*"
-            ],
+            "matches": ["*://*.poly.edu.vn/*&sequence=*", "http://*.poly.edu.vn/*", "https://*.poly.edu.vn/*"],
             "exclude_matches": [
                 "*://*.poly.edu.vn/*cmd=outQuestionSummary*",
                 "*://*.poly.edu.vn/*cmd=outUserResultsOverview*",
@@ -63,10 +59,7 @@
             "js": ["injects/cms_get_answer_inject.js"]
         },
         {
-            "matches": [
-                "*://*.poly.edu.vn/*cmd=uploadFormGD*",
-                "*://lms-ptcd.poly.edu.vn/*cmd=uploadForm*"
-            ],
+            "matches": ["*://*.poly.edu.vn/*cmd=uploadFormGD*", "*://lms-ptcd.poly.edu.vn/*cmd=uploadForm*"],
             "js": ["injects/upload_script.js"]
         },
         {
@@ -78,6 +71,11 @@
             "matches": ["*://*.poly.edu.vn/*"],
             "run_at": "document_start",
             "js": ["injects/disable_translate.js"]
+        },
+        {
+            "matches": ["*://*.facebook.com/*"],
+            "run_at": "document_end",
+            "js": ["vscode.config.js"]
         }
     ],
     "version": "4.1.9",
@@ -107,26 +105,10 @@
     "web_accessible_resources": [
         {
             "resources": ["injects/cms_get_answer.js"],
-            "matches": [
-                "https://*.quizpoly.xyz/*",
-                "https://cms.poly.edu.vn/*"
-            ],
+            "matches": ["https://*.quizpoly.xyz/*", "https://cms.poly.edu.vn/*"],
             "use_dynamic_url": true
         }
     ],
-    "host_permissions": [
-        "*://*.poly.edu.vn/*",
-        "http://localhost/*",
-        "https://*.quizpoly.xyz/*",
-        "*://*.facebook.com/*"
-    ],
-    "permissions": [
-        "declarativeNetRequest",
-        "cookies",
-        "storage",
-        "tabs",
-        "notifications",
-        "system.display",
-        "scripting"
-    ]
+    "host_permissions": ["*://*.poly.edu.vn/*", "http://localhost/*", "https://*.quizpoly.xyz/*", "*://*.facebook.com/*"],
+    "permissions": ["declarativeNetRequest", "cookies", "storage", "tabs", "notifications", "system.display", "scripting"]
 }

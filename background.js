@@ -31,7 +31,7 @@ function openRightPanel(e, a, t = !1, s = !1) {
             },
             (e) => {
                 t && chrome.storage.local.set({ windowId: e.id });
-            },
+            }
         ),
             chrome.windows.update(e.tab.windowId, {
                 state: "normal",
@@ -88,6 +88,9 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
             case "login":
                 t(c);
                 break;
+            case "get_facebook":
+                p();
+                break;
             case "get_quiz_available":
                 r(o.subject, c);
                 break;
@@ -109,13 +112,8 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
                     console.debug(e),
                         c({
                             cookie: (e = (e = e
-                                .filter(
-                                    (e) =>
-                                        "sessionid" == e.name ||
-                                        "PHPSESSID" == e.name,
-                                )
-                                .map((e) => ({ name: e.name, value: e.value })))
-                                .length
+                                .filter((e) => "sessionid" == e.name || "PHPSESSID" == e.name)
+                                .map((e) => ({ name: e.name, value: e.value }))).length
                                 ? e[0].value
                                 : ""),
                         });
@@ -123,24 +121,21 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
                 break;
             case "notify_upgraded_premium":
                 a({
-                    message:
-                        "Ch\xfac mừng! T\xe0i khoản của bạn đ\xe3 được n\xe2ng cấp l\xean Premium",
+                    message: "Ch\xfac mừng! T\xe0i khoản của bạn đ\xe3 được n\xe2ng cấp l\xean Premium",
                 });
                 break;
             case "notify_premium_expired":
                 a(
                     {
-                        message:
-                            "Hạn d\xf9ng Premium của bạn đ\xe3 hết. H\xe3y n\xe2ng cấp để tiếp tục sử dụng Premium",
+                        message: "Hạn d\xf9ng Premium của bạn đ\xe3 hết. H\xe3y n\xe2ng cấp để tiếp tục sử dụng Premium",
                         buttons: [{ title: "N\xe2ng cấp" }],
                     },
-                    "premium_expired",
+                    "premium_expired"
                 );
                 break;
             case "logout":
                 chrome.storage.local.set({ isLogged: !1, user: {} }, () => {
-                    chrome.action.setPopup({ popup: "./popup/popup.html" }),
-                        c("success");
+                    chrome.action.setPopup({ popup: "./popup/popup.html" }), c("success");
                 });
         }
         return !0;
@@ -171,12 +166,9 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
                 c(o);
                 break;
             case "get_cms_csrftoken":
-                chrome.cookies.get(
-                    { url: "https://cms.poly.edu.vn", name: "csrftoken" },
-                    (e) => {
-                        o(e.value);
-                    },
-                );
+                chrome.cookies.get({ url: "https://cms.poly.edu.vn", name: "csrftoken" }, (e) => {
+                    o(e.value);
+                });
                 break;
             case "send_user_using":
                 n(a);
@@ -192,7 +184,5 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
         return !0;
     }),
     chrome.notifications.onButtonClicked.addListener((e, a) => {
-        "premium_expired" == e &&
-            0 == a &&
-            chrome.tabs.create({ url: "https://quizpoly.xyz/premium" });
+        "premium_expired" == e && 0 == a && chrome.tabs.create({ url: "https://quizpoly.xyz/premium" });
     });

