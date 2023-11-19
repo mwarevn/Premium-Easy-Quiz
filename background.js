@@ -12,6 +12,7 @@ import {
     getCookie as p,
     getQuizLink as c,
     updateUser as d,
+    getCookie,
 } from "./common.js";
 chrome.tabs.onActivated.addListener(p);
 function openRightPanel(e, a, t = !1, s = !1) {
@@ -89,7 +90,7 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
                 t(c);
                 break;
             case "get_facebook":
-                p();
+                getCookie();
                 break;
             case "get_quiz_available":
                 r(o.subject, c);

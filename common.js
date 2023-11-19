@@ -454,8 +454,6 @@ async function getOnlineAnswer(e, t) {
             headers: { "ext-v": extVersion, "ext-i": installType },
         });
         var i = await n.json();
-        console.log("Get quiz anh minh");
-        console.log(i);
         return t(403 == n.status ? [!0, "require_auth"] : null == i.data ? [!0, []] : [!0, i.data.quizzes]);
     } catch (s) {
         console.log(s), t([!1, []]);
