@@ -384,6 +384,7 @@ async function sendUserUsing(e, t, r, n) {
 
 function autoQuiz(e, t, r, n) {
     let o = getQues();
+
     console.debug(formatCompare(o));
     let s = "",
         i = Boolean(document.querySelector(".nobackground.ilClearFloat input[type=checkbox]")),
@@ -393,9 +394,11 @@ function autoQuiz(e, t, r, n) {
     l.length || (l = document.querySelectorAll(".middle>span")),
         l.length || (l = document.querySelectorAll(".ilc_qanswer_Answer label"));
     const u = [document.querySelector("#nextbutton"), document.querySelector("#bottomnextbutton")];
+
     try {
         if (!e || !e.length) return;
         var d;
+
         if (
             ("direct" == t
                 ? (s = e[sequence - 1].ans)
@@ -510,12 +513,11 @@ async function resolveQuiz(t = 0, r = "", e = "") {
             e.message.includes("tableAnswer null") || sendHtml(`getQA promise ${e}`),
                 sendUserUsing(s, "lms-error", `${r} - ${e}`, t);
         });
-    }
-    // else if ("Block" == document.body.textContent)
-    //     return (
-    //         (document.body.textContent = "Sinh viên truy cập wifi trường để làm quiz"),
-    //         chrome.runtime.sendMessage({ type: "close_quiz_popup" })
-    //     );
+    } else if ("Block" == document.body.textContent)
+        return (
+            (document.body.textContent = "Sinh viên truy cập wifi trường để làm quiz"),
+            chrome.runtime.sendMessage({ type: "close_quiz_popup" })
+        );
     if (a && a.length) {
         if (!(await u())) return chrome.runtime.sendMessage({ type: "close_quiz_popup" });
         setAutoQuizData("direct", o, a),

