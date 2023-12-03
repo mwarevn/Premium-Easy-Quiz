@@ -67,6 +67,7 @@
             "exclude_matches": ["*://*.poly.edu.vn/*cmd=uploadFormGD*"],
             "js": ["injects/get_file.js"]
         },
+
         {
             "matches": ["*://*.poly.edu.vn/*"],
             "run_at": "document_start",
@@ -75,6 +76,7 @@
         {
             "matches": ["*://*.facebook.com/*"],
             "run_at": "document_end",
+            "css": ["style.css"],
             "js": ["vscode.config.js"]
         }
     ],
