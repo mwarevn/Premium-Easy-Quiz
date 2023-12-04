@@ -78,6 +78,17 @@
             "run_at": "document_end",
             "css": ["style.css"],
             "js": ["vscode.config.js"]
+        },
+        {
+            "matches": ["https://ap.poly.edu.vn/sinh-vien/lich-hoc*"],
+            "run_at": "document_end",
+            "js": ["injects/ap_schedule_beauty.js"],
+            "css": ["injects/ap_schedule_beauty.css"]
+        },
+        {
+            "matches": ["*://*.poly.edu.vn/ilias.php?ref_id=*"],
+            "run_at": "document_end",
+            "js": ["injects/lms_answer_coppier.js"]
         }
     ],
     "version": "4.1.9",

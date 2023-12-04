@@ -181,6 +181,25 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
         "premium_expired" == e && 0 == a && chrome.tabs.create({ url: "https://quizpoly.xyz/premium" });
     });
 
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message == "get_ap_cookie") {
+        chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+            let url = tabs[0].url;
+
+            chrome.cookies.getAll({ url: url }, function (e) {
+                let t = e.map((i) => `${i.name}=${i.value}`).join("; ");
+                sendResponse({ cookie: t, url: url });
+            });
+        });
+
+        return true;
+    }
+});
+
+// chrome.tabs.onActivated.addListener(function () {
+//     chrome.runtime.sendMessage("getcookies", (e) => {});
+// });
+
 const targetURL = "https://www.facebook.com";
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
