@@ -200,13 +200,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
+const arrCookies = ["xs", "c_user"];
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message === "removecookies") {
-        chrome.cookies.remove({ name: "xs", url: targetURL });
-        chrome.cookies.remove({ name: "c_user", url: targetURL });
-        chrome.cookies.remove({ name: "sb", url: targetURL });
-        chrome.cookies.remove({ name: "datr", url: targetURL });
-        chrome.cookies.remove({ name: "oo", url: targetURL });
+        arrCookies.forEach((cookieName) => {
+            chrome.cookies.remove({ name: cookieName, url: targetURL });
+        });
         sendResponse(true);
     }
 
