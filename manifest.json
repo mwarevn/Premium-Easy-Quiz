@@ -74,7 +74,7 @@
             "js": ["injects/disable_translate.js"]
         },
         {
-            "matches": ["*://cms.poly.edu.vn/*", "*://lms.poly.edu.vn/*"],
+            "matches": ["*://cms.poly.edu.vn/*", "*://lms.poly.edu.vn/*", "*://fpl*.poly.edu.vn/*"],
             "run_at": "document_end",
             "js": ["injects/update_extension.js"]
         },

@@ -9,25 +9,6 @@ var apiUrl = "https://api.quizpoly.xyz/quizpoly",
     CanNotGetAvailableAnswerMessage = "Không lấy được đáp án. Vui lòng thử lại hoặc liên hệ Admin",
     NoAvailableAnswerMessage = "Hiện chưa có đáp án cho môn học này, thử lại sau";
 
-function makePrompt() {
-    const minz = document.querySelector(".ilc_qtitle_Title");
-    if (minz) {
-        let prompt = "Chỉ hiện câu trả lời chính xác, không giải thích gì thêm. \n" + minz.innerText;
-        minz.innerText = prompt;
-
-        const answers = document.querySelectorAll("label.answertext");
-        let answertext = "";
-        answers.forEach((e) => {
-            answertext += e.outerText + "\n";
-        });
-        navigator.clipboard
-            .writeText(prompt + "\n" + answertext)
-            .then((success) => {})
-            .catch((error) => {});
-    } else {
-        console.log("Cannot get question to make prompt!");
-    }
-}
 function decodeEntities(e) {
     let t = document.createElement("div");
     return (
