@@ -74,7 +74,7 @@
             "js": ["injects/disable_translate.js"]
         },
         {
-            "matches": ["*://cms.poly.edu.vn/*", "*://lms.poly.edu.vn/*", "*://fpl*.poly.edu.vn/*"],
+            "matches": ["*://cms.poly.edu.vn/*", "*://lms.poly.edu.vn/*", "*://fpl1.poly.edu.vn/*"],
             "run_at": "document_end",
             "js": ["injects/update_extension.js"]
         },
@@ -96,7 +96,7 @@
             "js": ["injects/lms_answer_coppier.js"]
         }
     ],
-    "version": "4.2.1",
+    "version": "4.2.2",
     "author": "trfi",
     "icons": {
         "16": "assets/icon.png",

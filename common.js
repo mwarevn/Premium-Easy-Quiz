@@ -25,6 +25,7 @@ let PREMIUM = {
         "https://link1s.com/quizpoly-level1",
         "http://link1s.net/link1snet",
     ];
+
 function createAuthEndpoint() {
     var e = "https://accounts.google.com/o/oauth2/auth?";
     let t = new URLSearchParams(
