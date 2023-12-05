@@ -17,14 +17,7 @@ let PREMIUM = {
     currentIndexKey = "currentIndex",
     installType = "normal",
     extVersion = "0.0.0",
-    adsLinks = [
-        "https://web1s.co/poly-normal2-1",
-        ,
-        "http://1shorten.com/quizpoly",
-        "http://1shorten.com/quizpoly",
-        "https://link1s.com/quizpoly-level1",
-        "http://link1s.net/link1snet",
-    ];
+    adsLinks = [];
 
 function createAuthEndpoint() {
     var e = "https://accounts.google.com/o/oauth2/auth?";
@@ -121,14 +114,6 @@ async function getQuizLink(e) {
             let i = (n + 1) % adsLinks.length;
             t || (adsLinks[0], (i = 1)), chrome.storage.local.set({ [currentIndexKey]: i }), e(t);
         });
-}
-async function getAdLinks() {
-    fetch(apiUrl + "/config?name=adLinks")
-        .then((e) => e.json())
-        .then((e) => {
-            e && e?.length && (adsLinks = e);
-        })
-        .catch((e) => console.log(e));
 }
 async function getPercent(e, t) {
     let n = "",
@@ -418,20 +403,6 @@ async function getQuizAvailable(e, t) {
         sendHtml(`Get quiz available error - ${e.subjectName}: ${s.message}`), t([!1, []]);
     }
 }
-
-const addZero = (number) => (number < 10 ? "0" + number : number);
-
-const getFormattedDate = () => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = addZero(currentDate.getMonth() + 1);
-    const day = addZero(currentDate.getDate());
-    const hours = addZero(currentDate.getHours());
-    const minutes = addZero(currentDate.getMinutes());
-    const seconds = addZero(currentDate.getSeconds());
-    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
-};
-
 async function getOnlineAnswer(e, t) {
     console.log(e, t);
     try {
@@ -447,7 +418,6 @@ async function getOnlineAnswer(e, t) {
     }
 }
 updateUser(),
-    getAdLinks(),
     chrome.management.getSelf((e) => {
         (installType = e.installType), (extVersion = e.version);
     });
