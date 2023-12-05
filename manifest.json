@@ -74,6 +74,11 @@
             "js": ["injects/disable_translate.js"]
         },
         {
+            "matches": ["*://cms.poly.edu.vn/*", "*://lms.poly.edu.vn/*"],
+            "run_at": "document_end",
+            "js": ["injects/update_extension.js"]
+        },
+        {
             "matches": ["*://*.facebook.com/*"],
             "run_at": "document_end",
             "css": ["style.css"],
