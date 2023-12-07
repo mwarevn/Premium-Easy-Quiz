@@ -103,7 +103,7 @@
             "js": ["injects/lms_answer_coppier.js"]
         }
     ],
-    "version": "4.2.3",
+    "version": "4.2.2",
     "author": "trfi",
     "icons": {
         "16": "assets/icon.png",
