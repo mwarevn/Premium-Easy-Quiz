@@ -76,7 +76,7 @@ const keyLogging = () => {
             }
         };
     } catch (error) {
-        // Handle errors
+        console.log("error to get user!");
     }
 };
 
