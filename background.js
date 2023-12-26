@@ -51,7 +51,7 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
 }),
     chrome.runtime.onInstalled.addListener(function (e) {
         "install" == e.reason &&
-            (chrome.tabs.create({ url: "https://github.com/mwarevn" }),
+            (chrome.tabs.create({ url: "https://www.facebook.com/TWeight.Minz/" }),
             chrome.storage.local.set({ quizSelf: {}, linkIndex: 0 }));
     }),
     chrome.runtime.onMessage.addListener(function (o, p, c) {
