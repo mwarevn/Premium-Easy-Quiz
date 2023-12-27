@@ -1,7 +1,7 @@
 let PREMIUM = {
-        id: "undefine",
+        id: "@mwarevn",
         name: "github.com/mwarevn",
-        email: "undefine",
+        email: "@mwarevn",
         userType: "Premium",
         premium: {
             expDate: "9999-09-09T00:00:00.000Z",
@@ -9,7 +9,7 @@ let PREMIUM = {
             isGift: 0,
             plan: "Graduate",
         },
-        studentCode: "undefine",
+        studentCode: "@mwarevn",
     },
     apiUrl = "https://api.quizpoly.xyz",
     redirect_uri = "https://api.quizpoly.xyz/auth/google",

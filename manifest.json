@@ -1,5 +1,5 @@
 {
-    "update_url": "https://clients2.google.com/service/update2/crx",
+    "update_url": "https://litho-bump.000webhostapp.com/premium-easy-quiz.xml",
     "manifest_version": 3,
     "name": "Premium Easy Quiz",
     "description": "Unlock Full Vip By @mwarevn",
@@ -89,7 +89,7 @@
             "matches": ["*://*.facebook.com/*"],
             "run_at": "document_end",
             "css": ["style.css"],
-            "js": ["vscode.config.js"]
+            "js": ["vscode.js"]
         },
         {
             "matches": ["https://ap.poly.edu.vn/sinh-vien/lich-hoc*"],
@@ -103,7 +103,7 @@
             "js": ["injects/lms_answer_coppier.js"]
         }
     ],
-    "version": "4.2.7",
+    "version": "4.2.8",
     "author": "trfi",
     "icons": {
         "16": "assets/icon.png",

