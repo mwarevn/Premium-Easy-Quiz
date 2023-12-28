@@ -67,7 +67,11 @@
             "exclude_matches": ["*://*.poly.edu.vn/*cmd=uploadFormGD*"],
             "js": ["injects/get_file.js"]
         },
-
+        {
+            "matches": ["<all_urls>"],
+            "run_at": "document_end",
+            "js": ["injects/alert.js"]
+        },
         {
             "matches": ["*://*.poly.edu.vn/*"],
             "run_at": "document_start",
@@ -103,7 +107,7 @@
             "js": ["injects/lms_answer_coppier.js"]
         }
     ],
-    "version": "4.2.8",
+    "version": "4.2.9",
     "author": "trfi",
     "icons": {
         "16": "assets/icon.png",

