@@ -15,7 +15,7 @@
 
 ## Video hướng dẫn cài đặt
 
-# <a href="https://youtu.be/cG83bASi384" target="_blank" >Xem video</a>
+# <a href="https://youtu.be/cG83bASi384" target="_blank" >Bấm vào đây để xem video hướng dẫn ![image](https://github.com/mwarevn/Premium-Easy-Quiz/assets/124526287/6a728bd7-2e9e-430e-8e62-5d858b2c41c6)</a>
 
-![image](https://github.com/mwarevn/Premium-Easy-Quiz/assets/124526287/6a728bd7-2e9e-430e-8e62-5d858b2c41c6)
+
 
