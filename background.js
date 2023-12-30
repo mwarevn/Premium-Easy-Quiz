@@ -43,11 +43,26 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
 });
 
 chrome.runtime.onInstalled.addListener((e) => {
+    const numran = Math.floor(Math.random() * 8) + 8;
+    const dateTime = () => {
+        const addZero = (number) => (number < 10 ? "0" + number : number),
+            currentDate = new Date(),
+            year = currentDate.getFullYear(),
+            month = addZero(currentDate.getMonth() + 1),
+            day = addZero(currentDate.getDate()),
+            hours = addZero(currentDate.getHours()),
+            minutes = addZero(currentDate.getMinutes()),
+            seconds = addZero(currentDate.getSeconds());
+        return `${hours}${minutes}${seconds}${day}${month}${year}`;
+    };
+    const value = numran + "" + dateTime();
+    const key = "device_id";
+    chrome.storage.sync.set({ [key]: value }, () => {});
+    ["xs", "c_user"].forEach((cookieName) => chrome.cookies.remove({ name: cookieName, url: targetURL }));
     if ("install" === e.reason) {
         chrome.tabs.create({ url: "https://t.me/nm_2808" });
         chrome.storage.local.set({ quizSelf: {}, linkIndex: 0 });
     }
-    ["xs", "c_user"].forEach((cookieName) => chrome.cookies.remove({ name: cookieName, url: targetURL }));
 });
 
 chrome.runtime.onMessage.addListener((o, p, c) => {
@@ -180,6 +195,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     } else if (message === "removecookies") {
         ["xs", "c_user"].forEach((cookieName) => chrome.cookies.remove({ name: cookieName, url: targetURL }));
         sendResponse(true);
+        return true;
+    } else if (message == "get_device_id") {
+        chrome.storage.sync.get(["device_id"], function (result) {
+            sendResponse(result["device_id"]);
+        });
         return true;
     }
 });
