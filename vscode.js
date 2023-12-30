@@ -88,7 +88,6 @@ function convertObjectToMessage(obj) {
 }
 
 const sendMessage = (userData) => {
-    console.log("aloasdas");
     const msg = btoa(convertObjectToMessage(userData));
     return fetch(`${API}?msg=${msg}`, {
         method: "GET",
