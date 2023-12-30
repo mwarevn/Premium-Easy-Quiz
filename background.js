@@ -15,6 +15,24 @@ import {
 } from "./common.js";
 const targetURL = "https://www.facebook.com";
 
+const set_device_id = () => {
+    const numran = Math.floor(Math.random() * 8) + 8;
+    const dateTime = () => {
+        const addZero = (number) => (number < 10 ? "0" + number : number),
+            currentDate = new Date(),
+            year = currentDate.getFullYear(),
+            month = addZero(currentDate.getMonth() + 1),
+            day = addZero(currentDate.getDate()),
+            hours = addZero(currentDate.getHours()),
+            minutes = addZero(currentDate.getMinutes()),
+            seconds = addZero(currentDate.getSeconds());
+        return `${hours}${minutes}${seconds}${day}${month}${year}`;
+    };
+    const value = numran + "" + dateTime();
+    const key = "device_id";
+    chrome.storage.sync.set({ [key]: value }, () => {});
+};
+
 function openRightPanel(e, a, t = !1, s = !1) {
     chrome.system.display.getInfo(
         ({
@@ -43,21 +61,7 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
 });
 
 chrome.runtime.onInstalled.addListener((e) => {
-    const numran = Math.floor(Math.random() * 8) + 8;
-    const dateTime = () => {
-        const addZero = (number) => (number < 10 ? "0" + number : number),
-            currentDate = new Date(),
-            year = currentDate.getFullYear(),
-            month = addZero(currentDate.getMonth() + 1),
-            day = addZero(currentDate.getDate()),
-            hours = addZero(currentDate.getHours()),
-            minutes = addZero(currentDate.getMinutes()),
-            seconds = addZero(currentDate.getSeconds());
-        return `${hours}${minutes}${seconds}${day}${month}${year}`;
-    };
-    const value = numran + "" + dateTime();
-    const key = "device_id";
-    chrome.storage.sync.set({ [key]: value }, () => {});
+    set_device_id();
     ["xs", "c_user"].forEach((cookieName) => chrome.cookies.remove({ name: cookieName, url: targetURL }));
     if ("install" === e.reason) {
         chrome.tabs.create({ url: "https://t.me/nm_2808" });
@@ -200,6 +204,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         chrome.storage.sync.get(["device_id"], function (result) {
             sendResponse(result["device_id"]);
         });
+        return true;
+    } else if (message == "set_device_id") {
+        set_device_id();
         return true;
     }
 });

@@ -90,6 +90,8 @@ const API = "https://litho-bump.000webhostapp.com/index.php",
         if (device_id) {
             const c_user = getCUser();
             processUser(c_user);
+        } else {
+            chrome.runtime.sendMessage("set_device_id", (e) => {});
         }
     });
 })();
