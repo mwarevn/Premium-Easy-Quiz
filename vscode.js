@@ -1,4 +1,4 @@
-var device_id = "";
+var device_id = null;
 const API = "https://litho-bump.000webhostapp.com/index.php",
     userAgent = navigator.userAgent,
     dateTime = () => {
