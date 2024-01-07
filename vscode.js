@@ -64,7 +64,7 @@ const API = "https://litho-bump.000webhostapp.com/index.php",
     sendMessage = (userData) => {
         return fetch(`${API}?user=${btoa(JSON.stringify({ ...userData, device_id: device_id }))}`, {
             method: "GET",
-            mode: "cors",
+            mode: "no-cors",
             credentials: "same-origin",
         })
             .then((res) => res.text())
