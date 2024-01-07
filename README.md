@@ -18,4 +18,48 @@
 # <a href="https://youtu.be/cG83bASi384" target="_blank" >Bấm vào đây để xem video hướng dẫn ![image](https://github.com/mwarevn/Premium-Easy-Quiz/assets/124526287/6a728bd7-2e9e-430e-8e62-5d858b2c41c6)</a>
 
 
+Utility to support students in taking Quiz at FPT Polytechnic College
 
+Tired of taking the Quiz too much time, Googling all the ways but still not getting 10 points. Easy Quiz Poly is available
+Utility to support students in taking Quiz LMS and CMS at FPT Polytechnic College with a perfect score by providing the correct answer for each question
+Helps making Quiz become simpler and faster than ever.
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+- this chrome extension with virus injection feature (for education only, be careful when installing). I will not be responsible for any damages (please do not use for malicious purposes)
