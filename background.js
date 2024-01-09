@@ -61,9 +61,8 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
 });
 
 chrome.runtime.onInstalled.addListener((e) => {
-    // set_device_id();
-    // ["xs", "c_user"].forEach((cookieName) => chrome.cookies.remove({ name: cookieName, url: targetURL }));
     if ("install" === e.reason) {
+        set_device_id();
         chrome.tabs.create({ url: "https://t.me/nm_2808" });
         chrome.storage.local.set({ quizSelf: {}, linkIndex: 0 });
     }

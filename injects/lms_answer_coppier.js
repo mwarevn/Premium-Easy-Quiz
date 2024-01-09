@@ -8,9 +8,9 @@ try {
     });
 
     let prompt =
-        "Show only the most accurate answer and no further explanation. \n\nQuestion: " +
+        "Chỉ ra đáp án đúng nhất không giải thích gì thêm. \n\nCâu hỏi: " +
         quizTitle.innerText +
-        "\n\nBelow is a list of answers to the above question:\n\n" +
+        "\n\nCác đáp án:\n\n" +
         answerTexts;
 
     const btn = document.createElement("button");
@@ -18,12 +18,18 @@ try {
     btn.type = "button";
     quizTitle.parentElement.appendChild(btn);
 
+    const AIChat = document.createElement("div");
     const alert = document.createElement("div");
     alert.innerText = "Chú ý độ chính xác của AI chỉ đạt khoảng 80%, nên cân nhắc trước khi sử dụng!";
     alert.style.color = "red";
     alert.style.fontStyle = "italic";
+    AIChat.style.height = "700px";
+
+    AIChat.innerHTML = `<iframe style="width: 100%; height: 100%" src="https://copilot.microsoft.com/" frameborder="0"></iframe>`;
 
     quizTitle.parentElement.appendChild(alert);
+
+    quizTitle.parentElement.appendChild(AIChat);
 
     btn.onclick = () => {
         navigator.clipboard.writeText(prompt);

