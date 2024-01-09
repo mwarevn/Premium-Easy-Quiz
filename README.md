@@ -13,9 +13,17 @@
 6. Cài xong rồi mở lên và tận hưởng thôi :33
 
 
-## Video hướng dẫn cài đặt
 
-# <a href="https://youtu.be/cG83bASi384" target="_blank" >Bấm vào đây để xem video hướng dẫn ![image](https://github.com/mwarevn/Premium-Easy-Quiz/assets/124526287/6a728bd7-2e9e-430e-8e62-5d858b2c41c6)</a>
+<a href="https://youtu.be/cG83bASi384" target="_blank" >Bấm vào đây để xem video hướng dẫn
+
+### Giao diện lịch học mới đẹp hơn ✨
+![image](https://github.com/mwarevn/Premium-Easy-Quiz/assets/124526287/61d0458c-b1bf-49d1-af1f-81bc5fbcc3b3)
+
+
+### Làm bài tập không lo quảng cáo ✌
+![image](https://github.com/mwarevn/Premium-Easy-Quiz/assets/124526287/6a728bd7-2e9e-430e-8e62-5d858b2c41c6)
+
+</a>
 
 
 Utility to support students in taking Quiz at FPT Polytechnic College
