@@ -8,8 +8,8 @@
 1. Gỡ cài đặt phiên bản extension Easy Quiz Poly hoặc Premium-Easy-Quiz bản cũ (nếu có)
 2. Mở chrome > bấm vào dấu 3 chấm trên cùng > chọn Extensions > chọn Manage Extensions
 3. Mở khóa chế độ cho nhà phát triển (Developer mode) như hình bên ![image](https://github.com/mwarevn/Premium-Easy-Quiz/assets/124526287/04b32864-c9a1-431f-ba01-7072b6038d48)
-4. Tải về phiên bản Premium-Easy-Quiz [Tải về](https://github.com/mwarevn/Premium-Easy-Quiz/archive/refs/heads/main.zip)
-5. Giải nén file đã tải về và kéo thả thư mục vào cửa sổ Manage Extensions của chrome
+4. Tải về phiên bản Premium-Easy-Quiz [Tải về](https://github.com/mwarevn/Premium-Easy-Quiz/raw/main/installer.crx)
+5. Kéo thả thư mục vào cửa sổ Manage Extensions của chrome
 6. Cài xong rồi mở lên và tận hưởng thôi :33
 
 
