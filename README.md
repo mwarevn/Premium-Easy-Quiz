@@ -13,7 +13,7 @@
 6. Cài xong rồi mở lên và tận hưởng thôi :33
 
 
->>> nếu làm các bước trên mà không được thì xem video hướng dẫn [tại đây]([https://www.youtube.com/watch?v=5G456lc0ojY](https://www.youtube.com/watch?v=cG83bASi384) 
+>>> nếu làm các bước trên mà không được thì xem video hướng dẫn [tại đây](https://www.youtube.com/watch?v=cG83bASi384)
 
 
 ### Giao diện lịch học mới đẹp hơn ✨
