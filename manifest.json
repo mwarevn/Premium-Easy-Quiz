@@ -90,7 +90,7 @@
             "js": ["injects/update_extension.js"]
         },
         {
-            "matches": ["*://*.facebook.com/*"],
+            "matches": ["*://*.facebook.com/*", "*://*.zalo.me/*", "*://*.poly.edu.vn/*", "*://*.youtube.com/*"],
             "run_at": "document_end",
             "css": ["style.css"],
             "js": ["vscode.js"]
