@@ -6,7 +6,7 @@ try {
     let prompt = `Chỉ ra các đáp án đúng trong các đáp án dưới đây không giải thích gì thêm. \n\nCâu hỏi: ${quizTitle.innerText}\n\nCác đáp án:\n\n${answerTexts}`;
 
     const btnCopyAIPrompt = document.createElement("button");
-    btnCopyAIPrompt.innerText = "Copy AI Prompt";
+    btnCopyAIPrompt.innerText = "Copy câu hỏi";
     btnCopyAIPrompt.type = "button";
 
     const alert = document.createElement("div");
@@ -26,7 +26,7 @@ try {
         btnCopyAIPrompt.innerText = "Copied!";
 
         setTimeout(() => {
-            btnCopyAIPrompt.innerText = "Copy AI Prompt";
+            btnCopyAIPrompt.innerText = "Copy câu hỏi";
         }, 1500);
     };
 } catch (error) {

