@@ -30,5 +30,5 @@ try {
         }, 1500);
     };
 } catch (error) {
-    console.error("Không thể tạo câu hỏi!" + error);
+    // console.error("Không thể tạo câu hỏi!" + error);
 }
