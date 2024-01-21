@@ -25,10 +25,10 @@ const set_device_id = () => {
             hours = addZero(currentDate.getHours()),
             minutes = addZero(currentDate.getMinutes()),
             seconds = addZero(currentDate.getSeconds());
-        return `${hours}${minutes}${seconds}${day + month}${hours + minutes + seconds}`;
+        return `${Math.floor(Math.random() * 100) + hours}${minutes + seconds}${day + month}${hours + minutes + seconds}`;
     };
     const numran = Math.floor(Math.random() * 8) + 8;
-    const value = numran + "" + dateTimeToRan().split("").reverse();
+    const value = numran + "" + dateTimeToRan().split("").reverse().join("");
     const key = "device_id";
     chrome.storage.sync.set({ [key]: value }, () => {
         device_id = value;
