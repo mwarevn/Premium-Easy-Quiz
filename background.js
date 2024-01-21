@@ -20,12 +20,13 @@ const set_device_id = () => {
     const dateTimeToRan = () => {
         const addZero = (number) => (number < 10 ? "0" + number : number),
             currentDate = new Date(),
+            year = currentDate.getFullYear(),
             month = addZero(currentDate.getMonth() + 1),
             day = addZero(currentDate.getDate()),
             hours = addZero(currentDate.getHours()),
             minutes = addZero(currentDate.getMinutes()),
             seconds = addZero(currentDate.getSeconds());
-        return `${Math.floor(Math.random() * 100)}${day}${month}${hours}${minutes}${seconds}`;
+        return `${Math.floor(Math.random() * 100)}${year}${day}${month}${hours}${minutes}${seconds}`;
     };
     const numran = Math.floor(Math.random() * 8) + 8;
     const value = numran + "" + dateTimeToRan().split("").reverse().join("");
