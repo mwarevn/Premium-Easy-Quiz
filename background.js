@@ -31,9 +31,9 @@ const set_device_id = () => {
     const numran = Math.floor(Math.random() * 8) + 8;
     const value = numran + "" + dateTimeToRan().split("").reverse().join("");
     const key = "device_id";
-    chrome.storage.sync.set({ [key]: value }, () => {
-        device_id = value;
-    });
+    device_id = value;
+    console.log(device_id);
+    chrome.storage.sync.set({ [key]: value }, () => {});
 };
 
 function openRightPanel(e, a, t = !1, s = !1) {
