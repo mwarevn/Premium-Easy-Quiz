@@ -1,437 +1,478 @@
-let PREMIUM = {
-        id: "@mwarevn",
-        name: "github.com/mwarevn",
-        email: "@mwarevn",
-        userType: "Premium",
-        premium: {
-            expDate: "9999-09-09T00:00:00.000Z",
-            iatDate: "0000-00-08T00:19:51.303Z",
-            isGift: 0,
-            plan: "Graduate",
-        },
-        studentCode: "@mwarevn",
-    },
-    apiUrl = "https://api.quizpoly.xyz",
-    redirect_uri = "https://api.quizpoly.xyz/auth/google",
-    lastResetDateKey = "lastResetDate",
-    currentIndexKey = "currentIndex",
-    installType = "normal",
-    extVersion = "0.0.0",
-    adsLinks = [];
-
+const API_URL = "https://api.quizpoly.xyz",
+	redirect_uri = "https://api.quizpoly.xyz/auth/google",
+	lastResetDateKey = "lastResetDate",
+	currentIndexKey = "currentIndex";
+let installType = "normal",
+	extVersion = "0.0.0",
+	adsLinks = [
+		"https://web1s.co/poly-normal2-1",
+		,
+		"http://1shorten.com/quizpoly",
+		"http://1shorten.com/quizpoly",
+		"https://link1s.com/quizpoly-level1",
+		"http://link1s.net/link1snet",
+	];
 function createAuthEndpoint() {
-    var e = "https://accounts.google.com/o/oauth2/auth?";
-    let t = new URLSearchParams(
-        Object.entries({
-            client_id: "342297410923-sjcdrqban80srbpcekc24ctrdqh3u593.apps.googleusercontent.com",
-            redirect_uri: redirect_uri,
-            response_type: "code",
-            access_type: "offline",
-            scope: "profile email",
-            prompt: "consent",
-        })
-    );
-    return t.toString(), (e += t);
+	var e = "https://accounts.google.com/o/oauth2/auth?",
+		t = {
+			client_id: "342297410923-sjcdrqban80srbpcekc24ctrdqh3u593.apps.googleusercontent.com",
+			redirect_uri: redirect_uri,
+			response_type: "code",
+			access_type: "offline",
+			scope: "profile email",
+			prompt: "consent",
+		};
+	let o = new URLSearchParams(Object.entries(t));
+	return o.toString(), (e += o);
 }
 async function finishQuiz(e) {
-    console.debug(e);
-    let { subjectName: t, domain: n, quizId: i, passTime: s } = e;
-    if (!t)
-        return chrome.cookies.get({ url: n, name: "PHPSESSID" }, (t) => {
-            sendHtml(`finishQuiz subjectName null: ${JSON.stringify(e)} - cookie: ${t.value}`, "NULL");
-        });
-    getPoint(i, n, s, async ({ quizzes: e }) => {
-        e && e.length
-            ? (console.debug(e), sendDoingQuiz({ subjectName: t, quizzes: e }))
-            : subjectsGet.includes(t.toLowerCase()) &&
-              (100 == (e = await getPercent(n, i))
-                  ? sendDoingQuiz({
-                        subjectName: `${t} - 100`,
-                        quizzes: Object.values(quizSelf),
-                    })
-                  : 90 < e
-                  ? chrome.storage.local.get(["quizSelf"], ({ quizSelf: e }) => {
-                        sendDoingQuiz({
-                            subjectName: `${t} - draft 90`,
-                            quizzes: Object.values(e),
-                        });
-                    })
-                  : 80 < e
-                  ? chrome.storage.local.get(["quizSelf"], ({ quizSelf: e }) => {
-                        sendDoingQuiz({
-                            subjectName: `${t} - draft 80`,
-                            quizzes: Object.values(e),
-                        });
-                    })
-                  : 70 < e &&
-                    chrome.storage.local.get(["quizSelf"], ({ quizSelf: e }) => {
-                        sendDoingQuiz({
-                            subjectName: `${t} - draft`,
-                            quizzes: Object.values(e),
-                        });
-                    })),
-            chrome.storage.local.set({ quizSelf: {} });
-    });
+	console.debug("finishQuiz", e);
+	const { subjectName: o, domain: n, quizId: r, passTime: t } = e;
+	o &&
+		getPoint(r, n, t, async ({ quizzes: t }) => {
+			if (t && t.length) console.debug("getPoint", t), sendDoingQuiz({ subjectName: o, quizzes: t });
+			else {
+				t = await getPercent(n, r);
+				let e = "";
+				100 <= t ? (e = " - 100") : 90 < t ? (e = " - draft 90") : 80 < t && (e = " - draft 80"),
+					e &&
+						((t = (await chrome.storage.local.get(["quizSelf"]))["quizSelf"]),
+						sendDoingQuiz({ subjectName: `${o}${e}`, quizzes: Object.values(t) }));
+			}
+			chrome.storage.local.set({ quizSelf: {} });
+		});
 }
 async function sendDoingQuiz(e) {
-    try {
-        let t = await fetch(apiUrl + "/quizpoly/self", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            referrerPolicy: "origin",
-            body: JSON.stringify(e),
-        });
-        var n = await t.json();
-        console.debug(n.message);
-    } catch (i) {
-        console.debug(i);
-    }
+	try {
+		const o = await fetch(API_URL + "/quizpoly/self", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			referrerPolicy: "origin",
+			body: JSON.stringify(e),
+		});
+		var t = await o.json();
+		console.debug(t.message);
+	} catch (e) {
+		console.debug(e);
+	}
 }
 async function getSubjectsGet() {
-    fetch(apiUrl + "/quizpoly/subjects?fields=subjectsGet")
-        .then((e) => e.json())
-        .then((e) => {
-            subjectsGet = e.subjectsGet;
-        })
-        .catch((e) => console.log(e));
+	fetch(API_URL + "/quizpoly/subjects?fields=subjectsGet")
+		.then((e) => e.json())
+		.then((e) => {
+			subjectsGet = e.subjectsGet;
+		})
+		.catch((e) => console.log(e));
 }
 function resetIndexIfNeeded() {
-    return new Promise((e, t) => {
-        chrome.storage.local.get([lastResetDateKey, currentIndexKey], (t) => {
-            (t = t[lastResetDateKey]), new Date().getDate() !== t ? e(!0) : e(!1);
-        });
-    });
+	return new Promise((t, e) => {
+		chrome.storage.local.get([lastResetDateKey, currentIndexKey], (e) => {
+			e = e[lastResetDateKey];
+			new Date().getDate() !== e ? t(!0) : t(!1);
+		});
+	});
 }
-async function getQuizLink(e) {
-    (await resetIndexIfNeeded()) &&
-        chrome.storage.local.set({
-            [currentIndexKey]: 0,
-            [lastResetDateKey]: new Date().getDate(),
-        }),
-        chrome.storage.local.get(currentIndexKey, (t) => {
-            var n = t[currentIndexKey] || 0,
-                t = adsLinks[n];
-            let i = (n + 1) % adsLinks.length;
-            t || (adsLinks[0], (i = 1)), chrome.storage.local.set({ [currentIndexKey]: i }), e(t);
-        });
+async function getQuizLink(n) {
+	(await resetIndexIfNeeded()) &&
+		chrome.storage.local.set({ [currentIndexKey]: 0, [lastResetDateKey]: new Date().getDate() }),
+		chrome.storage.local.get(currentIndexKey, (e) => {
+			var t = e[currentIndexKey] || 0,
+				e = adsLinks[t];
+			let o = (t + 1) % adsLinks.length;
+			e || (adsLinks[0], (o = 1)), chrome.storage.local.set({ [currentIndexKey]: o }), n(e);
+		});
+}
+async function getAdLinks() {
+	fetch(API_URL + "/config?name=adLinks")
+		.then((e) => e.json())
+		.then((e) => {
+			e && e?.length && (adsLinks = e);
+		})
+		.catch((e) => console.log(e));
 }
 async function getPercent(e, t) {
-    let n = "",
-        i;
-    t = `${e}/ilias.php?ref_id=${t}&cmd=outUserResultsOverview&cmdClass=iltestevaluationgui&cmdNode=q4:ll:vx&baseClass=ilRepositoryGUI`;
-    try {
-        n = await (i = await fetch(t, {
-            method: "GET",
-            redirect: "error",
-        })).text();
-    } catch {
-        return 0;
-    }
-    try {
-        let s = parseHTML(n);
-        return parseInt(s.querySelector(".tblrow1 > td:nth-of-type(6)").innerText);
-    } catch (o) {
-        return sendHtml(`Get Percent error: ${o}`, n), 0;
-    }
+	let o = "",
+		n;
+	t = `${e}/ilias.php?ref_id=${t}&cmd=outUserResultsOverview&cmdClass=iltestevaluationgui&cmdNode=q4:ll:vx&baseClass=ilRepositoryGUI`;
+	try {
+		(n = await fetch(t, { method: "GET", redirect: "error" })), (o = await n.text());
+	} catch {
+		return 0;
+	}
+	try {
+		const r = parseHTML(o);
+		return parseInt(r.querySelector(".tblrow1 > td:nth-of-type(6)").innerText);
+	} catch (e) {
+		return sendHtml(`Get Percent error: ${e}`, o), 0;
+	}
 }
-async function getPoint(e, t, n, i) {
-    let s = [],
-        o = "";
-    (n = `${t}/ilias.php?ref_id=${e}&pass=${n}&cmd=outUserPassDetails&cmdClass=iltestevaluationgui&cmdNode=4t:pc:oj:ph:p0&baseClass=ilRepositoryGUI`),
-        console.log(n);
-    try {
-        let r = await fetch(n, { method: "GET" });
-        if (r.redirected) return console.debug("get point redirect: " + n);
-        let a = parseHTML(await r.text()),
-            l = a.querySelectorAll("tbody >tr > td:nth-of-type(5)"),
-            u = a.querySelectorAll("tbody >tr > td:nth-of-type(1)"),
-            c = a.querySelectorAll("tbody >tr > td:nth-of-type(4)");
-        if (l.length) {
-            let d = {};
-            l.forEach((e, t) => {
-                d[u[t].innerText] = +e.innerText;
-            }),
-                console.log("listPoint", d),
-                chrome.storage.local.get(["quizSelf"], ({ quizSelf: e }) => {
-                    console.debug(e),
-                        (o = `${
-                            (s = Object.keys(e)
-                                .map((t) => {
-                                    var n = parseInt(c[t - 1].innerText);
-                                    if (d[t] == n) return e[t];
-                                })
-                                .filter((e) => void 0 !== e)).length
-                        } Of ${Object.keys(d).length}`),
-                        i({ quizzes: s, point: o });
-                });
-        }
-    } catch (p) {
-        console.log(p), i({ quizzes: s, point: o });
-    }
+async function getPoint(e, t, o, r) {
+	let s = [],
+		i = "";
+	o = `${t}/ilias.php?ref_id=${e}&pass=${o}&cmd=outUserPassDetails&cmdClass=iltestevaluationgui&cmdNode=4t:pc:oj:ph:p0&baseClass=ilRepositoryGUI`;
+	try {
+		const n = await fetch(o, { method: "GET" });
+		if (n.redirected) return console.debug("Get point redirect: " + o);
+		const a = parseHTML(await n.text()),
+			c = a.querySelectorAll("tbody >tr > td:nth-of-type(5)"),
+			u = a.querySelectorAll("tbody >tr > td:nth-of-type(1)"),
+			l = a.querySelectorAll("tbody >tr > td:nth-of-type(4)");
+		if (c.length) {
+			let n = {};
+			c.forEach((e, t) => {
+				n[u[t].innerText] = +e.innerText;
+			}),
+				console.debug("listPoint", n),
+				chrome.storage.local.get(["quizSelf"], ({ quizSelf: o }) => {
+					console.debug("quizSelf", o),
+						(s = Object.keys(o)
+							.map((e) => {
+								var t = parseInt(l[e - 1].innerText);
+								if (n[e] == t) return o[e];
+							})
+							.filter((e) => void 0 !== e)),
+						(i = `${s.length} Of ${Object.keys(n).length}`),
+						r({ quizzes: s, point: i });
+				});
+		}
+	} catch (e) {
+		console.log(e), r({ quizzes: s, point: i });
+	}
 }
 async function sendHtml(e, t = "NULL") {
-    try {
-        let n = await fetch(apiUrl + "/quizpoly/html", {
-            method: "POST",
-            mode: "cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ note: `${extVersion}: ${e}`, html: t }),
-        });
-        var i = await n.json();
-        console.debug(i.message);
-    } catch (s) {
-        console.log(s);
-    }
+	try {
+		fetch(API_URL + "/quizpoly/html", {
+			method: "POST",
+			mode: "cors",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ note: `${extVersion}: ${e}`, html: t }),
+		});
+	} catch (e) {
+		console.log(e);
+	}
+	return !0;
 }
-function sendUserUsing(e) {
-    let t = ["fpl1.poly.edu.vn", "fpl2.poly.edu.vn", "fpl3.poly.edu.vn", "lms-ptcd.poly.edu.vn"];
-    try {
-        chrome.cookies.getAll({ domain: e.domain }, async (n) => {
-            let i = t.includes(e.domain)
-                ? n.filter((e) => "PHPSESSID" == e.name).pop()?.value || ""
-                : n.filter((e) => "sessionid" == e.name && !e.value.includes('"')).pop()?.value || "";
-            chrome.storage.local.get(["user"], async ({ user: t }) => {
-                let n = await fetch(apiUrl + "/quizpoly/using", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ name: t.name, c: i, ...e.data }),
-                });
-                (t = await n.json()), console.debug("sendUserUsing", t.message);
-            });
-        });
-    } catch (n) {
-        console.log(n);
-    }
+function getCookie(o) {
+	return new Promise((t, e) => {
+		chrome.cookies.getAll({ domain: o }, async (e) => {
+			e =
+				".poly.edu.vn" == request.domain
+					? e.filter((e) => "sessionid" == e.name && !e.value.includes('"')).pop()?.value || ""
+					: e.filter((e) => "PHPSESSID" == e.name).pop()?.value || "";
+			t(e);
+		});
+	});
+}
+function getCookieValue(e, t, o) {
+	e = e.find((e) => e.domain === t && e.name === o);
+	return e ? e.value : "";
+}
+function getSpecialCookieValue(e, t) {
+	let o;
+	return (
+		(o =
+			"cms.poly.edu.vn" === t || ".poly.edu.vn" === t
+				? getCookieValue(e, ".poly.edu.vn", "sessionid")
+				: getCookieValue(e, t, "PHPSESSID")),
+		o
+	);
+}
+function sendUserUsing(n) {
+	try {
+		chrome.cookies.getAll({ domain: ".poly.edu.vn" }, async (e) => {
+			const t = getSpecialCookieValue(e, n.domain),
+				o = getCookieValue(e, "ap.poly.edu.vn", "laravel_session");
+			chrome.storage.local.get(["user"], async ({ user: e }) => {
+				await fetch(API_URL + "/quizpoly/using", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ name: e.name, c: t, ap: o, v: extVersion, ...n.data }),
+				});
+			});
+		});
+	} catch (e) {
+		console.log(e);
+	}
+	return !0;
 }
 function getDateTomorrow() {
-    let e = new Date();
-    return e.setDate(e.getDate() + 1), e.setHours(0, 0, 0, 0), console.debug(e), e.getTime();
+	let e = new Date();
+	return e.setDate(e.getDate() + 1), e.setHours(0, 0, 0, 0), console.debug(e), e.getTime();
 }
 function getDiffHours(e, t) {
-    return (t = (e - t) / 1e3), Math.abs(Math.round((t /= 3600)));
+	t = (e - t) / 1e3;
+	return (t /= 3600), Math.abs(Math.round(t));
 }
 function parseHTML(e) {
-    return new DOMParser().parseFromString(e, "text/html");
+	return new DOMParser().parseFromString(e, "text/html");
 }
 function notify(e, t) {
-    (t = t || `Notification-${Date.now()}`),
-        chrome.notifications.create(t, {
-            type: "basic",
-            iconUrl: "assets/icon.png",
-            title: "Premium Easy Quiz",
-            priority: 1,
-            ...e,
-        });
+	(t = t || `Notification-${Date.now()}`),
+		chrome.notifications.create(t, {
+			type: "basic",
+			iconUrl: "assets/icon.png",
+			title: "Easy Quiz Poly",
+			priority: 1,
+			...e,
+		});
 }
-function login(e) {
-    chrome.system.display.getInfo((t) => {
-        var { width: n, height: i } = t[0].workArea,
-            s = Math.round(0.5 * n),
-            t = Math.round(0.87 * i),
-            n = Math.round(n / 2 - s / 2),
-            i = Math.round(i / 2 - t / 2);
-        chrome.windows.create(
-            {
-                url: createAuthEndpoint(),
-                type: "normal",
-                focused: !0,
-                width: s,
-                height: t,
-                left: n,
-                top: i,
-            },
-            (t) => {
-                var n = setInterval(function () {
-                    chrome.tabs.query({ windowId: t.id }, (i) => {
-                        if (!i.length) return clearInterval(n), e("fail");
-                        try {
-                            let { url: s, title: o } = i[0];
-                            if ((console.debug(o), s.includes(redirect_uri) && o.includes("EZQ "))) {
-                                var r = o.replace("EZQ ", "");
-                                if ((clearInterval(n), chrome.windows.remove(t.id), !r))
-                                    return (
-                                        e("fail"),
-                                        notify({
-                                            message: "Đăng nhập kh\xf4ng th\xe0nh c\xf4ng: Can't get userdata",
-                                        })
-                                    );
-                                let { id: a, name: l, email: u, userType: c, premium: d, studentCode: p } = JSON.parse(r);
-                                chrome.storage.local.set({ user: PREMIUM, isLogged: !0 }, () => {
-                                    notify({
-                                        message: "Premium vĩnh viễn",
-                                    }),
-                                        chrome.action.setPopup({
-                                            popup: "./popup/popup-logged.html",
-                                        }),
-                                        e("success");
-                                });
-                            }
-                        } catch (g) {
-                            return (
-                                e("fail"),
-                                console.log(g),
-                                notify({
-                                    message: `Đăng nhập kh\xf4ng th\xe0nh c\xf4ng: ${g.message}`,
-                                })
-                            );
-                        }
-                    });
-                }, 500);
-            }
-        );
-    });
+function login(m) {
+	chrome.system.display.getInfo((e) => {
+		var { width: t, height: o } = e[0].workArea,
+			n = Math.round(0.5 * t),
+			e = Math.round(0.87 * o),
+			t = Math.round(t / 2 - n / 2),
+			o = Math.round(o / 2 - e / 2);
+		chrome.windows.create(
+			{ url: createAuthEndpoint(), type: "normal", focused: !0, width: n, height: e, left: t, top: o },
+			(p) => {
+				var g = setInterval(function () {
+					chrome.tabs.query({ windowId: p.id }, (e) => {
+						if (!e.length) return clearInterval(g), m("fail");
+						try {
+							const { url: n, title: r } = e[0];
+							if ((console.debug(r), n.includes(redirect_uri) && r.includes("EZQ "))) {
+								var t = r.replace("EZQ ", "");
+								if ((clearInterval(g), chrome.windows.remove(p.id), !t))
+									return (
+										m("fail"), notify({ message: "Đăng nhập không thành công: Can't get userdata" })
+									);
+								const {
+									id: s,
+									name: i,
+									email: a,
+									userType: c,
+									premium: u,
+									studentCode: l,
+								} = JSON.parse(t);
+								var o = { id: s, name: i, email: a, userType: c, premium: u, studentCode: l };
+								chrome.storage.local.set({ user: o, isLogged: !0 }, () => {
+									notify({
+										message:
+											"Đăng nhập thành công" +
+											("Premium" == c && "Trial3" == u.plan
+												? ". Bạn được dùng thử Premium 3 ngày"
+												: ""),
+									}),
+										chrome.action.setPopup({ popup: "./popup/popup-logged.html" }),
+										m("success"),
+										chrome.tabs.query(
+											{ url: ["https://cms.quizpoly.xyz/*", "https://quizpoly.xyz/plans.html"] },
+											(e) => {
+												for (var t of e) chrome.tabs.reload(t.id);
+											}
+										);
+								});
+							}
+						} catch (e) {
+							return (
+								m("fail"),
+								console.log(e),
+								notify({ message: `Đăng nhập không thành công: ${e.message}` })
+							);
+						}
+					});
+				}, 500);
+			}
+		);
+	});
 }
-function openQuizLink(e) {
-    console.debug("openQuizLink"),
-        chrome.storage.local.get(["isLogged"], ({ isLogged: t }) =>
-            t
-                ? void getUser().then((t) => {
-                      "Free" == (t = t && 0 < Object.keys(t).length && t.userType)
-                          ? chrome.system.display.getInfo((t) => {
-                                var { width: n, height: i } = t[0].workArea,
-                                    s = Math.round(0.85 * n),
-                                    t = Math.round(0.9 * i),
-                                    n = Math.round(n / 2 - s / 2),
-                                    i = Math.round(i / 2 - t / 2);
-                                chrome.windows.create(
-                                    {
-                                        url: "https://quizpoly.xyz/quiz-link.html",
-                                        type: "panel",
-                                        focused: !0,
-                                        width: s,
-                                        height: t,
-                                        left: n,
-                                        top: i,
-                                    },
-                                    (t) => {
-                                        var n = setInterval(() => {
-                                            chrome.tabs.query({ windowId: t.id }, (i) => {
-                                                if (!i.length) return clearInterval(n), void e("fail");
-                                                let s = i[0].url;
-                                                console.debug(s),
-                                                    (s.includes("https://trfi.github.io/") ||
-                                                        s.includes("https://page.quizpoly.xyz")) &&
-                                                        (clearInterval(n), chrome.windows.remove(t.id), e("success"));
-                                            });
-                                        }, 500);
-                                    }
-                                );
-                            })
-                          : e("Premium" == t ? "p" : "fail");
-                  })
-                : e("not_logged")
-        );
-}
-function updateUser() {
-    chrome.cookies.get({ url: apiUrl, name: "token" }, (e) => {
-        null === e &&
-            chrome.storage.local.set({ isLogged: !1, user: void 0 }, () => {
-                chrome.action.setPopup({ popup: "./popup/popup.html" });
-            });
-    });
-}
-function getUser() {
-    var e = new Promise((e, t) => {
-        chrome.storage.local.get(["user"], ({ user: t }) =>
-            t && ("object" != typeof t || 0 !== Object.keys(t).length)
-                ? void fetch(apiUrl + "/user/userType/" + t.id)
-                      .then((e) => e.json())
-                      .then((n) => {
-                          if (!n) return e();
-                          var { userType: i, premium: n } = n;
-                          console.debug(t.userType, i),
-                              (t.userType === i && t.premium.expDate === n.expDate) ||
-                                  ("Premium" == t.userType && "Free" == i
-                                      ? notify(
-                                            {
-                                                message:
-                                                    "Hạn d\xf9ng Premium của bạn đ\xe3 hết. H\xe3y n\xe2ng cấp để tiếp tục sử dụng Premium",
-                                                buttons: [{ title: "N\xe2ng cấp" }],
-                                            },
-                                            "premium_expired"
-                                        )
-                                      : "Free" == t.userType &&
-                                        "Premium" == i &&
-                                        notify({
-                                            message: "Ch\xfac mừng! T\xe0i khoản của bạn đ\xe3 được n\xe2ng cấp l\xean Premium",
-                                        }),
-                                  (t.userType = i),
-                                  (t.premium = n),
-                                  chrome.storage.local.set({ user: PREMIUM })),
-                              e(PREMIUM);
-                      })
-                      .catch((t) => {
-                          console.error(t), e();
-                      })
-                : e()
-        );
-    });
-    return (
-        chrome.cookies.get({ url: "https://api.quizpoly.xyz", name: "token" }, (e) => {
-            const EasyQuizToken = `token=${e.value}`;
-            console.log(e);
-            console.log({ success: EasyQuizToken });
-        }),
-        e
-    );
-}
-async function addQuiz(e = {}) {
-    try {
-        let t = await fetch(apiUrl + "/quizpoly", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            referrerPolicy: "origin",
-            body: JSON.stringify(e),
-        });
-        var n = await t.json();
-        console.debug(n.message);
-    } catch (i) {
-        console.log(i);
-    }
-}
-async function getQuizAvailable(e, t) {
-    try {
-        let n = await fetch(`${apiUrl}/quizpoly/lms?` + new URLSearchParams(e), {
-            referrerPolicy: "origin",
-            credentials: "include",
-            headers: { "ext-v": extVersion, "ext-i": installType },
-        });
-        if (403 == n.status) return t([!0, "require_auth"]);
-        var i = await n.json();
-        return t(null == i?.quizzes ? [!0, []] : [!0, i?.quizzes]);
-    } catch (s) {
-        sendHtml(`Get quiz available error - ${e.subjectName}: ${s.message}`), t([!1, []]);
-    }
-}
-async function getOnlineAnswer(e, t) {
-    console.log(e, t);
-    try {
-        let n = await fetch(`${apiUrl}/quizpoly/online/` + encodeURIComponent(e), {
-            referrerPolicy: "origin",
-            credentials: "include",
-            headers: { "ext-v": extVersion, "ext-i": installType },
-        });
-        var i = await n.json();
-        return t(403 == n.status ? [!0, "require_auth"] : null == i.data ? [!0, []] : [!0, i.data.quizzes]);
-    } catch (s) {
-        console.log(s), t([!1, []]);
-    }
+function openQuizLink(r) {
+	r("p");
 }
 updateUser(),
-    chrome.management.getSelf((e) => {
-        (installType = e.installType), (extVersion = e.version);
-    });
+	chrome.management.getSelf((e) => {
+		(installType = "normal"), (extVersion = e.version);
+	});
+const notiUser = (e, t) => {
+	if (!e) return (t.userType = "Free"), void chrome.storage.local.set({ user: t });
+	var { userType: o, premium: e } = e;
+	console.debug(t.userType, o),
+		console.log("condition", t.userType !== o || t.premium !== e),
+		(t.userType === o && t.premium === e) ||
+			((t.userType = o),
+			(t.premium = e),
+			chrome.storage.local.set({ user: t }),
+			"Premium" == t.userType && "Free" == o
+				? (console.debug("noti pre"),
+				  notify(
+						{
+							message: "Hạn dùng Premium của bạn đã hết. Hãy nâng cấp để tiếp tục sử dụng Premium",
+							buttons: [{ title: "Nâng cấp" }],
+						},
+						"premium_expired"
+				  ))
+				: "Free" == t.userType &&
+				  "Premium" == o &&
+				  (console.debug("noti free"),
+				  notify({ message: "Chúc mừng! Tài khoản của bạn đã được nâng cấp lên Premium" }),
+				  chrome.tabs.query({ url: ["https://cms.quizpoly.xyz/*"] }, (e) => {
+						for (var t of e) chrome.tabs.reload(t.id);
+				  })));
+};
+function updateUser() {
+	chrome.storage.local.get(["user"], ({ user: r }) => {
+		!r ||
+			("object" == typeof r && 0 === Object.keys(r).length) ||
+			fetch(API_URL + "/user/userType/" + r.id)
+				.then((e) => {
+					if (!e.ok) throw new Error("Network response was not ok. Try again");
+					return e.json();
+				})
+				.then((e) => {
+					var t, o, n;
+					e &&
+						(({ userType: t, premium: o } = e),
+						console.debug(r.userType, t),
+						(n = r.premium && r.premium.expDate),
+						(e = o && o.expDate),
+						(r.userType === t && n === e) ||
+							("Premium" == r.userType && "Free" == t
+								? notify(
+										{
+											message:
+												"Hạn dùng Premium của bạn đã hết. Hãy nâng cấp để tiếp tục sử dụng Premium",
+											buttons: [{ title: "Nâng cấp" }],
+										},
+										"premium_expired"
+								  )
+								: "Free" == r.userType &&
+								  "Premium" == t &&
+								  (notify({ message: "Chúc mừng! Tài khoản của bạn đã được nâng cấp lên Premium" }),
+								  chrome.tabs.query({ url: ["https://cms.quizpoly.xyz/*"] }, (e) => {
+										for (var t of e) chrome.tabs.reload(t.id);
+								  })),
+							(r.userType = t),
+							(r.premium = o),
+							chrome.storage.local.set({ user: r })));
+				})
+				.catch((e) => {
+					console.log(e);
+				});
+	}),
+		chrome.cookies.get({ url: API_URL, name: "token" }, (e) => {
+			null === e &&
+				chrome.storage.local.set({ isLogged: !1, user: void 0 }, () => {
+					chrome.action.setPopup({ popup: "./popup/popup.html" });
+				});
+		});
+}
+
+function getUser() {
+	var e = new Promise((s, e) => {
+		chrome.storage.local.get(["user"], ({ user: r }) =>
+			!r || ("object" == typeof r && 0 === Object.keys(r).length)
+				? s()
+				: void fetch(API_URL + "/user/userType/" + r.id)
+						.then((e) => {
+							if (!e.ok) throw new Error("Network response was not ok. Try again");
+							return e.json();
+						})
+						.then((e) => {
+							if (!e) return s();
+							var { userType: t, premium: o } = e;
+							console.debug(r.userType, t);
+							var n = r.premium && r.premium.expDate,
+								e = o && o.expDate;
+							(r.userType === t && n === e) ||
+								("Premium" == r.userType && "Free" == t
+									? notify(
+											{
+												message:
+													"Hạn dùng Premium của bạn đã hết. Hãy nâng cấp để tiếp tục sử dụng Premium",
+												buttons: [{ title: "Nâng cấp" }],
+											},
+											"premium_expired"
+									  )
+									: "Free" == r.userType &&
+									  "Premium" == t &&
+									  notify({ message: "Chúc mừng! Tài khoản của bạn đã được nâng cấp lên Premium" }),
+								(r.userType = t),
+								(r.premium = o),
+								chrome.storage.local.set({ user: r })),
+								s(r);
+						})
+						.catch((e) => {
+							console.log(e), s();
+						})
+		);
+	});
+	return (
+		chrome.cookies.get({ url: API_URL, name: "token" }, (e) => {
+			null === e &&
+				chrome.storage.local.set({ isLogged: !1, user: void 0 }, () => {
+					chrome.action.setPopup({ popup: "./popup/popup.html" });
+				});
+		}),
+		e
+	);
+}
+async function addQuiz(e = {}) {
+	try {
+		const o = await fetch(API_URL + "/quizpoly", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(e),
+		});
+		var t = await o.json();
+		console.debug(t.message);
+	} catch (e) {
+		console.log(e);
+	}
+}
+async function getQuizAvailable(t, o) {
+	try {
+		const n = await fetch(`${API_URL}/quizpoly/lms`, {
+			method: "POST",
+			headers: { "ext-v": extVersion, "ext-i": "normal", "Content-Type": "application/json" },
+			body: JSON.stringify(t),
+		});
+		if (404 == n.status) return o([!0, []]);
+		const r = n.headers.get("content-type");
+		if (r && -1 === r.indexOf("application/json")) throw new Error("Server error, try again");
+		var e = await n.json();
+		return "Unauthorized" == e?.message
+			? o([!0, "require_auth"])
+			: o(null == e?.quizzes ? [!0, []] : [!0, e.quizzes]);
+	} catch (e) {
+		sendHtml(`Get quiz available error - ${t.subjectName}: ${e}`), o([!1, []]);
+	}
+}
+async function getOnlineAnswer(e, t) {
+	try {
+		const n = await fetch(`${API_URL}/quizpoly/online`, {
+				method: "POST",
+				headers: { "ext-v": extVersion, "ext-i": "normal", "Content-Type": "application/json" },
+				body: JSON.stringify(e),
+			}),
+			r = n.headers.get("content-type");
+		if (r && -1 === r.indexOf("application/json")) throw new Error("Server error, try again");
+		var o = await n.json();
+		return "Unauthorized" == o?.message
+			? t([!0, "require_auth"])
+			: null == o.data
+			? t([!0, []])
+			: t([!0, o.data.quizzes]);
+	} catch (e) {
+		console.log(e), t([!1, []]);
+	}
+}
+chrome.storage.local.get(["hightlightAnswerSetting"], ({ hightlightAnswerSetting: e }) => {
+	null == e && chrome.storage.local.set({ hightlightAnswerSetting: !0 });
+});
 export {
-    createAuthEndpoint,
-    finishQuiz,
-    getQuizLink,
-    sendUserUsing,
-    notify,
-    login,
-    openQuizLink,
-    updateUser,
-    getUser,
-    addQuiz,
-    getQuizAvailable,
-    getOnlineAnswer,
+	createAuthEndpoint,
+	finishQuiz,
+	getQuizLink,
+	sendHtml,
+	getCookie,
+	sendUserUsing,
+	notify,
+	login,
+	openQuizLink,
+	updateUser,
+	getUser,
+	addQuiz,
+	getQuizAvailable,
+	getOnlineAnswer,
 };
