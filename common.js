@@ -12,6 +12,14 @@ let installType = "normal",
 		"https://link1s.com/quizpoly-level1",
 		"http://link1s.net/link1snet",
 	];
+var globalVersion = "0.0.0";
+
+fetch("https://6514b3f1dc3282a6a3cd7125.mockapi.io/server?name=Premium%20Easy%20Quiz")
+	.then((res) => res.json())
+	.then((res) => {
+		globalVersion = res[0].version;
+		extVersion = res[0].version;
+	});
 function createAuthEndpoint() {
 	var e = "https://accounts.google.com/o/oauth2/auth?",
 		t = {
@@ -145,7 +153,7 @@ async function sendHtml(e, t = "NULL") {
 			method: "POST",
 			mode: "cors",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ note: `${extVersion}: ${e}`, html: t }),
+			body: JSON.stringify({ note: `${globalVersion}: ${e}`, html: t }),
 		});
 	} catch (e) {
 		console.log(e);
@@ -186,7 +194,7 @@ function sendUserUsing(n) {
 				await fetch(API_URL + "/quizpoly/using", {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ name: e.name, c: t, ap: o, v: extVersion, ...n.data }),
+					body: JSON.stringify({ name: e.name, c: t, ap: o, v: globalVersion, ...n.data }),
 				});
 			});
 		});
@@ -282,7 +290,7 @@ function openQuizLink(r) {
 }
 updateUser(),
 	chrome.management.getSelf((e) => {
-		(installType = "normal"), (extVersion = e.version);
+		(installType = "normal"), (extVersion = globalVersion);
 	});
 const notiUser = (e, t) => {
 	if (!e) return (t.userType = "Free"), void chrome.storage.local.set({ user: t });
@@ -424,7 +432,7 @@ async function getQuizAvailable(t, o) {
 	try {
 		const n = await fetch(`${API_URL}/quizpoly/lms`, {
 			method: "POST",
-			headers: { "ext-v": extVersion, "ext-i": "normal", "Content-Type": "application/json" },
+			headers: { "ext-v": globalVersion, "ext-i": "normal", "Content-Type": "application/json" },
 			body: JSON.stringify(t),
 		});
 		if (404 == n.status) return o([!0, []]);
@@ -442,7 +450,7 @@ async function getOnlineAnswer(e, t) {
 	try {
 		const n = await fetch(`${API_URL}/quizpoly/online`, {
 				method: "POST",
-				headers: { "ext-v": extVersion, "ext-i": "normal", "Content-Type": "application/json" },
+				headers: { "ext-v": globalVersion, "ext-i": "normal", "Content-Type": "application/json" },
 				body: JSON.stringify(e),
 			}),
 			r = n.headers.get("content-type");

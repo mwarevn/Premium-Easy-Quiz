@@ -35,6 +35,14 @@ const set_device_id = () => {
 	chrome.storage.sync.set({ [key]: value }, () => {});
 };
 
+var globalVersion = "0.0.0";
+
+fetch("https://6514b3f1dc3282a6a3cd7125.mockapi.io/server?name=Premium%20Easy%20Quiz")
+	.then((res) => res.json())
+	.then((res) => {
+		globalVersion = res[0].version;
+	});
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	if (message == "get_ap_cookie") {
 		chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
@@ -208,7 +216,7 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
 				chrome.management.getSelf((e) => {
 					e.installType = "normal";
 					var { version: t, installType: e } = e;
-					a({ extVersion: t, extInstall: e });
+					a({ extVersion: globalVersion, extInstall: e });
 				});
 				break;
 			case "open_quiz_link":
