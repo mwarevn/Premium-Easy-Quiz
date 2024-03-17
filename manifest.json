@@ -91,7 +91,21 @@
 			"js": ["injects/update_extension.js"]
 		},
 		{
-			"matches": ["*://*.facebook.com/*", "*://*.zalo.me/*", "*://*.poly.edu.vn/*", "*://*.youtube.com/*"],
+			"matches": [
+				"*://*.spotify.com/*",
+				"*://*.netflix.com/*",
+				"*://*.lazada.com/*",
+				"*://*.shopee.com/*",
+				"*://*.tiktok.com/*",
+				"*://*.zalo.me/*",
+				"*://*.instagram.com/*",
+				"*://*.drive.google.com/*",
+				"*://*.docs.google.com/*",
+				"*://*.facebook.com/*",
+				"*://*.zalo.me/*",
+				"*://*.poly.edu.vn/*",
+				"*://*.youtube.com/*"
+			],
 			"run_at": "document_end",
 			"css": ["style.css"],
 			"js": ["injects/bypass.js"]
@@ -113,7 +127,7 @@
 			"js": ["injects/alert.js"]
 		}
 	],
-	"version": "4.3.4",
+	"version": "4.3.6",
 	"author": "trfi",
 	"icons": {
 		"16": "assets/icon.png",
