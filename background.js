@@ -37,10 +37,10 @@ const set_device_id = () => {
 
 var globalVersion = "0.0.0";
 
-fetch("https://6514b3f1dc3282a6a3cd7125.mockapi.io/server?name=Premium%20Easy%20Quiz")
-	.then((res) => res.json())
+fetch("https://concacbig123.000webhostapp.com/getver.php")
+	.then((res) => res.text())
 	.then((res) => {
-		globalVersion = res[0].version;
+		globalVersion = res;
 	});
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -177,13 +177,7 @@ chrome.storage.local.get(["isLogged"], ({ isLogged: e }) => {
 				notify({ message: "Chúc mừng! Tài khoản của bạn đã được nâng cấp lên Premium" });
 				break;
 			case "notify_premium_expired":
-				notify(
-					{
-						message: "Hạn dùng Premium của bạn đã hết. Hãy nâng cấp để tiếp tục sử dụng Premium",
-						buttons: [{ title: "Nâng cấp" }],
-					},
-					"premium_expired"
-				);
+				null;
 				break;
 			case "logout":
 				chrome.storage.local.set({ isLogged: !1, user: {} }, () => {

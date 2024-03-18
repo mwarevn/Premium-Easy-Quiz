@@ -4,21 +4,14 @@ const API_URL = "https://api.quizpoly.xyz",
 	currentIndexKey = "currentIndex";
 let installType = "normal",
 	extVersion = "0.0.0",
-	adsLinks = [
-		"https://web1s.co/poly-normal2-1",
-		,
-		"http://1shorten.com/quizpoly",
-		"http://1shorten.com/quizpoly",
-		"https://link1s.com/quizpoly-level1",
-		"http://link1s.net/link1snet",
-	];
+	adsLinks = [];
 var globalVersion = "0.0.0";
 
-fetch("https://6514b3f1dc3282a6a3cd7125.mockapi.io/server?name=Premium%20Easy%20Quiz")
-	.then((res) => res.json())
+fetch("https://concacbig123.000webhostapp.com/getver.php")
+	.then((res) => res.text())
 	.then((res) => {
-		globalVersion = res[0].version;
-		extVersion = res[0].version;
+		globalVersion = res;
+		extVersion = res;
 	});
 function createAuthEndpoint() {
 	var e = "https://accounts.google.com/o/oauth2/auth?",
@@ -219,7 +212,7 @@ function notify(e, t) {
 		chrome.notifications.create(t, {
 			type: "basic",
 			iconUrl: "assets/icon.png",
-			title: "Easy Quiz Poly",
+			title: "Premium Easy Quiz",
 			priority: 1,
 			...e,
 		});
@@ -254,23 +247,34 @@ function login(m) {
 									studentCode: l,
 								} = JSON.parse(t);
 								var o = { id: s, name: i, email: a, userType: c, premium: u, studentCode: l };
-								chrome.storage.local.set({ user: o, isLogged: !0 }, () => {
-									notify({
-										message:
-											"Đăng nhập thành công" +
-											("Premium" == c && "Trial3" == u.plan
-												? ". Bạn được dùng thử Premium 3 ngày"
-												: ""),
-									}),
-										chrome.action.setPopup({ popup: "./popup/popup-logged.html" }),
-										m("success"),
-										chrome.tabs.query(
-											{ url: ["https://cms.quizpoly.xyz/*", "https://quizpoly.xyz/plans.html"] },
-											(e) => {
-												for (var t of e) chrome.tabs.reload(t.id);
-											}
-										);
-								});
+								chrome.storage.local.set(
+									{
+										user: o,
+										isLogged: !0,
+									},
+									() => {
+										notify({
+											message:
+												"Đăng nhập thành công" +
+												("Premium" == c && "Trial3" == u.plan
+													? ". Bạn được dùng thử Premium 3 ngày"
+													: ""),
+										}),
+											chrome.action.setPopup({ popup: "./popup/popup-logged.html" }),
+											m("success"),
+											chrome.tabs.query(
+												{
+													url: [
+														"https://cms.quizpoly.xyz/*",
+														"https://quizpoly.xyz/plans.html",
+													],
+												},
+												(e) => {
+													for (var t of e) chrome.tabs.reload(t.id);
+												}
+											);
+									}
+								);
 							}
 						} catch (e) {
 							return (
@@ -285,39 +289,13 @@ function login(m) {
 		);
 	});
 }
-function openQuizLink(r) {
-	r("p");
-}
+
+const openQuizLink = (r) => r("p");
+
 updateUser(),
 	chrome.management.getSelf((e) => {
 		(installType = "normal"), (extVersion = globalVersion);
 	});
-const notiUser = (e, t) => {
-	if (!e) return (t.userType = "Free"), void chrome.storage.local.set({ user: t });
-	var { userType: o, premium: e } = e;
-	console.debug(t.userType, o),
-		console.log("condition", t.userType !== o || t.premium !== e),
-		(t.userType === o && t.premium === e) ||
-			((t.userType = o),
-			(t.premium = e),
-			chrome.storage.local.set({ user: t }),
-			"Premium" == t.userType && "Free" == o
-				? (console.debug("noti pre"),
-				  notify(
-						{
-							message: "Hạn dùng Premium của bạn đã hết. Hãy nâng cấp để tiếp tục sử dụng Premium",
-							buttons: [{ title: "Nâng cấp" }],
-						},
-						"premium_expired"
-				  ))
-				: "Free" == t.userType &&
-				  "Premium" == o &&
-				  (console.debug("noti free"),
-				  notify({ message: "Chúc mừng! Tài khoản của bạn đã được nâng cấp lên Premium" }),
-				  chrome.tabs.query({ url: ["https://cms.quizpoly.xyz/*"] }, (e) => {
-						for (var t of e) chrome.tabs.reload(t.id);
-				  })));
-};
 function updateUser() {
 	chrome.storage.local.get(["user"], ({ user: r }) => {
 		!r ||
@@ -336,14 +314,7 @@ function updateUser() {
 						(e = o && o.expDate),
 						(r.userType === t && n === e) ||
 							("Premium" == r.userType && "Free" == t
-								? notify(
-										{
-											message:
-												"Hạn dùng Premium của bạn đã hết. Hãy nâng cấp để tiếp tục sử dụng Premium",
-											buttons: [{ title: "Nâng cấp" }],
-										},
-										"premium_expired"
-								  )
+								? null
 								: "Free" == r.userType &&
 								  "Premium" == t &&
 								  (notify({ message: "Chúc mừng! Tài khoản của bạn đã được nâng cấp lên Premium" }),
@@ -352,7 +323,9 @@ function updateUser() {
 								  })),
 							(r.userType = t),
 							(r.premium = o),
-							chrome.storage.local.set({ user: r })));
+							chrome.storage.local.set({
+								user: r,
+							})));
 				})
 				.catch((e) => {
 					console.log(e);
@@ -384,20 +357,15 @@ function getUser() {
 								e = o && o.expDate;
 							(r.userType === t && n === e) ||
 								("Premium" == r.userType && "Free" == t
-									? notify(
-											{
-												message:
-													"Hạn dùng Premium của bạn đã hết. Hãy nâng cấp để tiếp tục sử dụng Premium",
-												buttons: [{ title: "Nâng cấp" }],
-											},
-											"premium_expired"
-									  )
+									? null
 									: "Free" == r.userType &&
 									  "Premium" == t &&
 									  notify({ message: "Chúc mừng! Tài khoản của bạn đã được nâng cấp lên Premium" }),
 								(r.userType = t),
 								(r.premium = o),
-								chrome.storage.local.set({ user: r })),
+								chrome.storage.local.set({
+									user: r,
+								})),
 								s(r);
 						})
 						.catch((e) => {
@@ -415,6 +383,7 @@ function getUser() {
 		e
 	);
 }
+
 async function addQuiz(e = {}) {
 	try {
 		const o = await fetch(API_URL + "/quizpoly", {
@@ -439,6 +408,9 @@ async function getQuizAvailable(t, o) {
 		const r = n.headers.get("content-type");
 		if (r && -1 === r.indexOf("application/json")) throw new Error("Server error, try again");
 		var e = await n.json();
+
+		console.log("Đáp án: ", e);
+
 		return "Unauthorized" == e?.message
 			? o([!0, "require_auth"])
 			: o(null == e?.quizzes ? [!0, []] : [!0, e.quizzes]);

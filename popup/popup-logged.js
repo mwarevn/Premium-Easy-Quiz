@@ -7,7 +7,7 @@ var lmsMessage = `Vào lms làm bài như bình thường tiện ích sẽ tự 
 function u() {
 	return new Promise((t) => {
 		chrome.runtime.sendMessage({ type: "open_quiz_link" }, (e) => {
-			console.debug(e), t("success" == e || "p" == e);
+			console.debug(e), t(true);
 		});
 	});
 }
@@ -70,25 +70,5 @@ document.addEventListener("DOMContentLoaded", () => {
 			chrome.runtime.sendMessage({ type: "logout" }, function (e) {
 				window.close();
 			});
-		}),
-		chrome.storage.local.get(["user"], async ({ user: e }) => {
-			document.getElementById("userName").innerText = e.name;
-			const t = document.getElementById("userType"),
-				n = document.getElementById("expDate");
-			(t.innerText = e.userType),
-				"Premium" == e.userType &&
-					(t.classList.add("text-transparent", "bg-gradient-to-r", "from-purple-300", "to-pink-400"),
-					(n.innerText = "Exp: " + new Date(e.premium.expDate).toLocaleDateString("vi")),
-					(document.getElementById("btnUpgrade").innerText = "Gia hạn Premium"));
-			var s = await getUser();
-			if (!s) return window.close();
-			var { userType: e, premium: s } = s;
-			"Premium" == (t.innerText = e)
-				? (t.classList.add("text-transparent", "bg-gradient-to-r", "from-purple-300", "to-pink-400"),
-				  (n.innerText = "Exp: " + new Date(s.expDate).toLocaleDateString("vi")),
-				  (document.getElementById("btnUpgrade").innerText = "Gia hạn Premium"))
-				: (t.classList.remove("text-transparent", "bg-gradient-to-r", "from-purple-300", "to-pink-400"),
-				  (n.innerText = ""),
-				  (document.getElementById("btnUpgrade").innerText = "Nâng cấp Premium"));
 		});
 });

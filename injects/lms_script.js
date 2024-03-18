@@ -485,10 +485,10 @@ async function resolveQuiz(t = 0, r = "", e = "") {
 			}))),
 		"Block" == document.body.textContent)
 	) {
-		// return (
-		// 	(document.body.textContent = "Sinh viên truy cập wifi trường để làm quiz"),
-		// 	void chrome.runtime.sendMessage({ type: "close_quiz_popup" })
-		// );
+		return (
+			(document.body.textContent = "Dùng vpn hoặc mạng 4G để lấy đáp án sau đó dùng mạng trường để làm quiz"),
+			void chrome.runtime.sendMessage({ type: "close_quiz_popup" })
+		);
 	}
 
 	if (a && a.length)
